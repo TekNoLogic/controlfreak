@@ -4,7 +4,7 @@
 local class = UnitClass("player")
 
 if class == "Priest" then
-CONTROLFREAKTARGETTYPE = "undead"
+CONTROLFREAKTARGETTYPES = {Undead = true}
 CONTROLFREAKSPELL = "Shackle Undead"
 CONTROLFREAKMACROTEXT = [[
 /cast [target=focus,exists,nodead,harm] Shackle Undead
