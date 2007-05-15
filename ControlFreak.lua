@@ -1,20 +1,19 @@
 ﻿
 
-local macrotext, targtype, debuffname = CONTROLFREAKMACROTEXT, CONTROLFREAKTARGETTYPE, CONTROLFREAKDEBUFF
-CONTROLFREAKMACROTEXT, CONTROLFREAKTARGETTYPE, CONTROLFREAKDEBUFF = nil, nil, nil
+local macrotext, targtype, spellname = CONTROLFREAKMACROTEXT, CONTROLFREAKTARGETTYPE, CONTROLFREAKSPELL
+CONTROLFREAKMACROTEXT, CONTROLFREAKTARGETTYPE, CONTROLFREAKSPELL = nil, nil, nil
 if not macrotext then return end
 
 
-local focuscontrolled, focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists
-local text, frame, updateframe, updating
-local damageinterval = 3
-local colors = {
-	default = {1.0, 0.8, 0.0},
-	red     = {1.0, 0.0, 0.0},
-	green   = {0.0, 1.0, 0.0},
-	blue    = {0.0, 0.0, 1.0},
-	grey    = {0.7, 0.7, 0.7},
+local focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
+local damageinterval, focuscontrolled, colors = 3, {}, {
+	default = {1.0, 0.8, 0.0, t = ""},
+	red     = {1.0, 0.0, 0.0, t = "|cffff0000"},
+	green   = {0.0, 1.0, 0.0, t = "|cff00ff00"},
+	blue    = {0.0, 0.0, 1.0, t = "|cff0000ff"},
+	grey    = {0.7, 0.7, 0.7, t = "|cff808080"},
 }
+
 
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 local DongleFrames = DongleStub("DongleFrames-1.0")
@@ -111,28 +110,24 @@ function ControlFreak.OnUpdate(self, elapsed)
 	local wasfocusdead = focusdead
 	focusdead = focusexists and UnitIsDead("focus")
 
-	local color, text = "default", "Control Freak"
-	if focusisenemy and not focusdead then -- need to check focus's type also
-		---- DoT
-		if self.damagetime and self.damagetime >= (GetTime()-damageinterval) then color, text = "red", "|cffff0000Damage"
-		elseif focuscontrolled then color, text = "blue", "|cff0000ffControlled"
-		---- OOC
-		else color, text = "green", "|cff00ff00Ready" end
+	local color, note, range, unittag = "default", "Control Freak", "", ""
+	local unit
+	if focusisenemy and not focusdead then unit = "focus" end
+	if unit then
+		if IsSpellInRange(spellname, unit) == 0 then range = " R" end
+--~ 		if self.damagetime and self.damagetime >= (GetTime()-damageinterval) then color, note = "red", "Damage"
+		if controlled[unit] then color, note = "blue", "Controlled"
+		elseif UnitAffectingCombat(unit) then color, note = "red", "Loose"
+		else color, note = "green", "Ready" end
 
-	-- Target, correct type
-	---- DoT
-	---- Damage
-	---- CC
-	---- OOC
-
-	elseif focusisenemy and focusdead then color, text = "grey", "|cff808080Dead"
+	elseif focusisenemy and focusdead then color, note = "grey", "Dead"
 	-- focus type
 	-- target dead
 	-- target type
 	end
 
 	frame:SetBackdropBorderColor((unpack(colors[color])), 0.8)
-	text:SetText(text)
+	text:SetText(string.concat(colors[color].t,, note, range)
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
 end

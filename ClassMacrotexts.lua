@@ -5,7 +5,7 @@ local class = UnitClass("player")
 
 if class == "Priest" then
 CONTROLFREAKTARGETTYPE = "undead"
-CONTROLFREAKDEBUFF = "Shackle Undead"
+CONTROLFREAKSPELL = "Shackle Undead"
 CONTROLFREAKMACROTEXT = [[
 /cast [target=focus,exists,nodead,harm] Shackle Undead
 /stopmacro [target=focus,exists,nodead,harm]
