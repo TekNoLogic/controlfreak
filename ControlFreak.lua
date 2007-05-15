@@ -127,7 +127,7 @@ function ControlFreak.OnUpdate(self, elapsed)
 	end
 
 	frame:SetBackdropBorderColor((unpack(colors[color])), 0.8)
-	text:SetText(string.concat(colors[color].t,, note, range)
+	text:SetText(string.concat(colors[color].t, note, range)
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
 end
