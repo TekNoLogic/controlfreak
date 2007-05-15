@@ -1,0 +1,16 @@
+## Interface: 20003
+
+## Title: Control Freak
+## Notes: Crowd control assistance
+## Author: Tekkub Stoutwrithe
+## Version: Alpha
+## X-Website: http://code.google.com/p/tekkub-wow/
+## X-Email: tekkub-wow@googlegroups.com
+## X-Category: Combat
+
+## OptionalDeps: Dongle
+
+Dongle.lua
+DongleFrames.lua
+
+ControlFreak.lua
