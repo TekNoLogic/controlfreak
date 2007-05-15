@@ -7,7 +7,7 @@ if not macrotext then return end
 
 
 local focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
-local damageinterval, focuscontrolled, colors = 3, {}, {
+local damageinterval, controlled, colors = 3, {}, {
 	default = {1.0, 0.8, 0.0, t = ""},
 	red     = {1.0, 0.0, 0.0, t = "|cffff0000"},
 	green   = {0.0, 1.0, 0.0, t = "|cff00ff00"},
@@ -100,7 +100,7 @@ function ControlFreak:UNIT_AURA(event, unit)
 end
 
 
-function ControlFreak.OnUpdate(self, elapsed)
+function ControlFreak:OnUpdate(elapsed)
 	self = ControlFreak
 	self.elapsed = self.elapsed or 0
 
@@ -111,15 +111,15 @@ function ControlFreak.OnUpdate(self, elapsed)
 	local wasfocusdead = focusdead
 	focusdead = focusexists and UnitIsDead("focus")
 
-	local color, note, range, unittag = "default", "Control Freak", "", ""
+	local alpha, color, note, range, unittag = 0.5, "default", "Control Freak", "", ""
 	local unit
 	if focusisenemy and not focusdead then unit = "focus" end
 	if unit then
 		if IsSpellInRange(spellname, unit) == 0 then range = " R" end
 --~ 		if self.damagetime and self.damagetime >= (GetTime()-damageinterval) then color, note = "red", "Damage"
 		if controlled[unit] then color, note = "blue", "Controlled"
-		elseif UnitAffectingCombat(unit) then color, note = "red", "Loose"
-		else color, note = "green", "Ready" end
+		elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "red", "Loose"
+		else alpha, color, note = 1.0, "green", "Ready" end
 
 	elseif focusisenemy and focusdead then color, note = "grey", "Dead"
 	-- focus type
@@ -127,7 +127,8 @@ function ControlFreak.OnUpdate(self, elapsed)
 	-- target type
 	end
 
-	frame:SetBackdropBorderColor((unpack(colors[color])), 0.8)
+	frame:SetAlpha(alpha)
+	frame:SetBackdropBorderColor(unpack(colors[color]))
 	text:SetText(string.concat(colors[color].t, note, range))
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
