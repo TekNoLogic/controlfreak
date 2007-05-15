@@ -13,4 +13,5 @@
 Dongle.lua
 DongleFrames.lua
 
+ClassMacrotexts.lua
 ControlFreak.lua
