@@ -77,10 +77,13 @@ function ControlFreak:StopTimer()
 end
 
 
+local lasthp, lasthptime
 function ControlFreak:PLAYER_FOCUS_CHANGED()
 	focusexists = UnitExists("focus")
 	focusisenemy = focusexists and UnitIsEnemy("player", "focus")
 	focusdead = focusexists and UnitIsDead("focus")
+
+	lasthp, lasthptime = focusexists and UnitHealth("focus"), 0
 
 	if (not focusexists and not targetexists)
 		or focusdead and not targetexists
@@ -111,13 +114,16 @@ function ControlFreak:OnUpdate(elapsed)
 	local wasfocusdead = focusdead
 	focusdead = focusexists and UnitIsDead("focus")
 
+	local hp = focusexists and UnitHealth("focus")
+	if hp and hp ~= lasthp then lasthp, lasthptime = hp, GetTime() end
+
 	local alpha, color, note, range, unittag = 0.5, "default", "Control Freak", "", ""
 	local unit
 	if focusisenemy and not focusdead then unit = "focus" end
 	if unit then
 		if IsSpellInRange(spellname, unit) == 0 then range = " R" end
---~ 		if self.damagetime and self.damagetime >= (GetTime()-damageinterval) then color, note = "red", "Damage"
-		if controlled[unit] then color, note = "blue", "Controlled"
+		if lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
+		elseif controlled[unit] then color, note = "blue", "Controlled"
 		elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "red", "Loose"
 		else alpha, color, note = 1.0, "green", "Ready" end
 
