@@ -7,11 +7,11 @@ if not macrotext then return end
 
 
 local focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
-local damageinterval, controlled, colors = 3, {}, {
+local maxdebuffs, damageinterval, controlled, colors = 40, 3, {}, {
 	default = {1.0, 0.8, 0.0, t = ""},
 	red     = {1.0, 0.0, 0.0, t = "|cffff0000"},
 	green   = {0.0, 1.0, 0.0, t = "|cff00ff00"},
-	blue    = {0.0, 0.0, 1.0, t = "|cff0000ff"},
+	cyan    = {0.0, 0.7, 1.0, t = "|cff00B2ff"},
 	grey    = {0.7, 0.7, 0.7, t = "|cff808080"},
 }
 
@@ -97,9 +97,13 @@ end
 function ControlFreak:UNIT_AURA(event, unit)
  	if unit ~= "focus" then return end
 
-	-- aura ~= debuffname
---~ 	focuscontrolled = gained
---~ 	self:OnUpdate(true)
+	local wascontrolled = controlled[unit]
+	controlled[unit] = nil
+	for i=1,maxdebuffs do
+		if UnitDebuff(unit, i) == spellname then controlled[unit] = true end
+	end
+
+	if wascontrolled ~= controlled[unit] then self:OnUpdate(true) end
 end
 
 
@@ -123,7 +127,7 @@ function ControlFreak:OnUpdate(elapsed)
 	if unit then
 		if IsSpellInRange(spellname, unit) == 0 then range = " R" end
 		if lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
-		elseif controlled[unit] then color, note = "blue", "Controlled"
+		elseif controlled[unit] then color, note = "cyan", "Controlled"
 		elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "red", "Loose"
 		else alpha, color, note = 1.0, "green", "Ready" end
 
