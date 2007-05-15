@@ -14,6 +14,18 @@ CONTROLFREAKMACROTEXT = [[
 /clearfocus [target=focus,dead]
 ]]
 
+elseif class == "Mage" then
+CONTROLFREAKTARGETTYPES = {Beast = true, Humanoid = true}
+CONTROLFREAKSPELL = "Polymorph"
+--~ /cast [target=focus,exists,nodead,harm] Polymorph
+CONTROLFREAKMACROTEXT = [[
+/cast [target=focus,exists,nodead,harm] Polymorph
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [combat,harm,exists,nodead] Polymorph
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+]]
+
 end
 
 -- TODO:
