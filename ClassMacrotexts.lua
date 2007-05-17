@@ -7,6 +7,8 @@ if class == "Priest" then
 CONTROLFREAKTARGETTYPES = {Undead = true}
 CONTROLFREAKSPELL = "Shackle Undead"
 CONTROLFREAKMACROTEXT = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
 /cast [target=focus,exists,nodead,harm] Shackle Undead
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Shackle Undead
@@ -18,6 +20,8 @@ elseif class == "Mage" then
 CONTROLFREAKTARGETTYPES = {Beast = true, Humanoid = true, Critter = true}
 CONTROLFREAKSPELL = "Polymorph"
 CONTROLFREAKMACROTEXT = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
 /cast [target=focus,exists,nodead,harm] Polymorph
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Polymorph
@@ -29,6 +33,8 @@ elseif class == "Druid" then
 CONTROLFREAKTARGETTYPES = {Beast = true, Dragonkin = true}
 CONTROLFREAKSPELL = "Hibernate"
 CONTROLFREAKMACROTEXT = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
 /cast [target=focus,exists,nodead,harm] Hibernate
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Hibernate
@@ -41,5 +47,4 @@ end
 -- TODO:
 -- Hunter: Trap, fear beast
 -- Warlock: Banish, fear
--- Druid: Hibernate, cyclone
 -- Paladin: Turn undead

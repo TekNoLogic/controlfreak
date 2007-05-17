@@ -51,7 +51,6 @@ end
 
 
 function ControlFreak:OnDragStart(button)
-	if not IsShiftKeyDown() then return end
 	self:StartMoving()
 	self.isMoving = true
 end
@@ -90,7 +89,7 @@ function ControlFreak:PLAYER_FOCUS_CHANGED()
 		or focusdead and not targetexists
 		or targetdead and not focusexists
 		or focusdead and targetdead then
-			self:StopTimer(self, true)
+			self:StopTimer()
 	elseif not updating then self:StartTimer() end
 end
 
