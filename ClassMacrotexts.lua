@@ -42,9 +42,34 @@ CONTROLFREAKMACROTEXT = [[
 /clearfocus [target=focus,dead]
 ]]
 
+elseif class == "Warlock" then
+CONTROLFREAKTARGETTYPES = {Demon = true, Elemental = true}
+CONTROLFREAKSPELL = "Banish"
+CONTROLFREAKMACROTEXT = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/cast [target=focus,exists,nodead,harm] Banish
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [combat,harm,exists,nodead] Banish
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+]]
+
+elseif class == "Paladin" then
+CONTROLFREAKTARGETTYPES = {Undead = true}
+CONTROLFREAKSPELL = "Turn Undead"
+CONTROLFREAKMACROTEXT = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/cast [target=focus,exists,nodead,harm] Turn Undead
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [combat,harm,exists,nodead] Turn Undead
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+]]
+
 end
 
 -- TODO:
 -- Hunter: Trap, fear beast
--- Warlock: Banish, fear
--- Paladin: Turn undead
+-- Warlock: fear
