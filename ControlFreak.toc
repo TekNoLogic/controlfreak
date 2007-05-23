@@ -1,4 +1,4 @@
-## Interface: 20003
+## Interface: 21000
 
 ## Title: Control Freak
 ## Notes: Crowd control assistance
