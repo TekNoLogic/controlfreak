@@ -10,6 +10,9 @@
 
 ## OptionalDeps: Dongle
 
+## LoadManagers: tekonomics
+## X-tekonomics: IsNotResting
+
 Dongle.lua
 DongleFrames.lua
 
