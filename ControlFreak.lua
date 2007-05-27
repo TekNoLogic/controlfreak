@@ -19,23 +19,15 @@ local maxdebuffs, damageinterval, isvalid, controlled, colors = 40, 3, {}, {}, {
 
 
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
-local DongleFrames = DongleStub("DongleFrames-1.0")
+local LegoBlock = DongleStub("LegoBlock-Beta0-1.0")
 
 
 function ControlFreak:Initialize()
 	-- Create our frame --
-	frame = DongleFrames:Create("t=Button#n=ControlFreakFrame#p=UIParent#size=110,32#mouse#drag=LeftButton#movable#clamp#inh=SecureActionButtonTemplate", "CENTER", 0, -200)
-	frame.Text = DongleFrames:Create("p=ControlFreakFrame#t=FontString#inh=GameFontNormal#text=Control Freak", "CENTER", 0, 0)
-	text = frame.Text
-	frame:SetAttribute("type", "macro")
-	frame:SetAttribute("macrotext", macrotext)
-	frame:SetBackdrop({
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		edgeSize = 16,
-		insets = {left = 4, right = 4, top = 4, bottom = 4},
-	})
-	frame:SetBackdropColor(0,0,0,0.4)
+	frame = LegoBlock:GetLego("ControlFreak", "Controlled (000s)")
+	frame.noresize = true
+	frame:SetText("Control Freak")
+	frame:SetManyAttributes("type", "macro", "macrotext", macrotext)
 	frame:SetScript("OnDragStart", self.OnDragStart)
 	frame:SetScript("OnDragStop", self.OnDragStop)
 
@@ -136,7 +128,6 @@ function ControlFreak:OnUpdate(elapsed)
 				if timeLeft and timeLeft <= TIMETHRESHOLD then alpha = 1.0 end
 			elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "orange", "Loose"
 			else alpha, color, note = 1.0, "green", "Ready" end
-
 		end
 
 	elseif focusisenemy and focusdead then color, note = "grey", "Dead"
@@ -147,7 +138,7 @@ function ControlFreak:OnUpdate(elapsed)
 
 	frame:SetAlpha(alpha)
 	frame:SetBackdropBorderColor(unpack(colors[color]))
-	text:SetText(string.concat(colors[color].t, range, note, range))
+	frame:SetText(string.concat(colors[color].t, range, note, range))
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
 end

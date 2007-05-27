@@ -15,6 +15,7 @@
 
 Dongle.lua
 DongleFrames.lua
+LegoBlock.lua
 
 ClassMacrotexts.lua
 ControlFreak.lua
