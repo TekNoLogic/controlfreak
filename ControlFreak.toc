@@ -8,7 +8,7 @@
 ## X-Email: tekkub-wow@googlegroups.com
 ## X-Category: Combat
 
-## OptionalDeps: Dongle
+## OptionalDeps: Dongle, OptionsHouse
 
 ## LoadManagers: tekonomics
 ## X-tekonomics: IsNotResting
@@ -19,3 +19,4 @@ LegoBlock.lua
 
 ClassMacrotexts.lua
 ControlFreak.lua
+Config.lua

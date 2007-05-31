@@ -13,7 +13,7 @@ CONTROLFREAKMACROTEXT = [[
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Shackle Undead
 /focus [exists,harm,nodead] target
-/clearfocus [target=focus,dead]
+/clearfocus [target=focus,dead];
 ]]
 
 elseif class == "Mage" then
@@ -26,7 +26,7 @@ CONTROLFREAKMACROTEXT = [[
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Polymorph
 /focus [exists,harm,nodead] target
-/clearfocus [target=focus,dead]
+/clearfocus [target=focus,dead];
 ]]
 
 elseif class == "Druid" then
@@ -39,7 +39,7 @@ CONTROLFREAKMACROTEXT = [[
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Hibernate
 /focus [exists,harm,nodead] target
-/clearfocus [target=focus,dead]
+/clearfocus [target=focus,dead];
 ]]
 
 elseif class == "Warlock" then
@@ -52,7 +52,7 @@ CONTROLFREAKMACROTEXT = [[
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Banish
 /focus [exists,harm,nodead] target
-/clearfocus [target=focus,dead]
+/clearfocus [target=focus,dead];
 ]]
 
 elseif class == "Paladin" then
@@ -65,7 +65,7 @@ CONTROLFREAKMACROTEXT = [[
 /stopmacro [target=focus,exists,nodead,harm]
 /cast [combat,harm,exists,nodead] Turn Undead
 /focus [exists,harm,nodead] target
-/clearfocus [target=focus,dead]
+/clearfocus [target=focus,dead];
 ]]
 
 end

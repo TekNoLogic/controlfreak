@@ -18,18 +18,21 @@ local maxdebuffs, damageinterval, isvalid, controlled, colors = 40, 3, {}, {}, {
 }
 
 
-ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 local LegoBlock = DongleStub("LegoBlock-Beta0-1.0")
+local f = LegoBlock:GetLego("ControlFreak", "Controlled (000s)")
+ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak", f)
 
 
 function ControlFreak:Initialize()
 	-- Create our frame --
-	frame = LegoBlock:GetLego("ControlFreak", "Controlled (000s)")
-	frame.noresize = true
-	frame:SetText("Control Freak")
-	frame:SetManyAttributes("type", "macro", "macrotext", macrotext)
-	frame:SetScript("OnDragStart", self.OnDragStart)
-	frame:SetScript("OnDragStop", self.OnDragStop)
+--~ 	frame = LegoBlock:GetLego("ControlFreak", "Controlled (000s)")
+	self.noresize = true
+	self:SetText("Control Freak")
+	self:SetManyAttributes("type", "macro", "macrotext", macrotext, "ctrl-macrotext1", "/script ControlFreak.CreatePanel()")
+	self:SetScript("OnDragStart", self.OnDragStart)
+	self:SetScript("OnDragStop", self.OnDragStop)
+	self:SetScript("OnEnter", self.OnEnter)
+	self:SetScript("OnLeave", self.OnLeave)
 
 	-- Frame for OnUpdates
 	updateframe = CreateFrame("Frame")
@@ -43,7 +46,13 @@ function ControlFreak:Initialize()
 end
 
 
+function ControlFreak:GetMacro()
+	return macrotext
+end
+
+
 function ControlFreak:OnDragStart(button)
+	if self.locked then return end
 	self:StartMoving()
 	self.isMoving = true
 end
@@ -53,6 +62,22 @@ function ControlFreak:OnDragStop()
 	if not self.isMoving then return end
 	self:StopMovingOrSizing()
 	self.isMoving = false
+end
+
+
+function ControlFreak:OnEnter()
+	local sx, sy, x, y = GetScreenHeight(), GetScreenWidth(), self:GetCenter()
+	local x1, y1, y2 = "RIGHT", "TOP", "BOTTOM"
+	if x < (sx/2) then x1 = "LEFT" end
+	if y < (sy/2) then y1, y2 = y2, y1 end
+ 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
+	GameTooltip:SetPoint(y1..x1, self, y2..x1)
+	GameTooltip:SetText("Ctrl-click to open config")
+end
+
+
+function ControlFreak:OnLeave()
+	GameTooltip:Hide()
 end
 
 
@@ -136,9 +161,9 @@ function ControlFreak:OnUpdate(elapsed)
 	-- target type
 	end
 
-	frame:SetAlpha(alpha)
-	frame:SetBackdropBorderColor(unpack(colors[color]))
-	frame:SetText(string.concat(colors[color].t, range, note, range))
+	self:SetAlpha(alpha)
+	self:SetBackdropBorderColor(unpack(colors[color]))
+	self:SetText(string.concat(colors[color].t, range, note, range))
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
 end
