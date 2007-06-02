@@ -1,12 +1,11 @@
 ﻿
 string.concat = strconcat
 
-local macrotext, spellname, targtypes = CONTROLFREAKMACROTEXT, CONTROLFREAKSPELL, CONTROLFREAKTARGETTYPES
+local macro, spellname, targtypes = CONTROLFREAKMACROTEXT, CONTROLFREAKSPELL, CONTROLFREAKTARGETTYPES
 CONTROLFREAKMACROTEXT, CONTROLFREAKTARGETTYPES, CONTROLFREAKSPELL = nil, nil, nil
-if not macrotext then return end
+if not macro then return end
 
 
-local TIMETHRESHOLD = 5
 local lasthp, lasthptime, focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
 local maxdebuffs, damageinterval, isvalid, controlled, colors = 40, 3, {}, {}, {
 	default = {1.0, 0.8, 0.0, t = ""},
@@ -16,19 +15,39 @@ local maxdebuffs, damageinterval, isvalid, controlled, colors = 40, 3, {}, {}, {
 	cyan    = {0.0, 0.8, 1.0, t = "|cff00ccff"},
 	grey    = {0.8, 0.8, 0.8, t = "|cff808080"},
 }
-
+local L = {
+	["Click to set focus\n"] = "Click to set focus\n",
+	["Click to cast on focus\n"] = "Click to cast on focus\n",
+	["Click to cast on target\n"] = "Click to cast on target\n",
+	["Click to clear focus\n"] = "Click to clear focus\n",
+	["Shift-click to clear focus\n"] = "Shift-click to clear focus\n",
+	["Type /freak to open config"] = "Type /freak to open config",
+}
 
 local LegoBlock = DongleStub("LegoBlock-Beta0-1.0")
-local f = LegoBlock:GetLego("ControlFreak", "Controlled (000s)")
+local f = LegoBlock:New("ControlFreak", "Controlled (000s)")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak", f)
 
 
 function ControlFreak:Initialize()
-	-- Create our frame --
---~ 	frame = LegoBlock:GetLego("ControlFreak", "Controlled (000s)")
+	self.db = self:InitializeDB("ControlFreakDB", {profile = {
+		macrotext = macro,
+		spellname = spellname,
+		targtypes = targtypes,
+		locked = false,
+		breakthreshold = 5,
+		alpha = 0.5,
+		x = 0, y = -200, anchor = "CENTER",
+	}})
+
+	local slasher = self:InitializeSlashCommand("Control Freak config", "CONTROLFREAK", "freak")
+	slasher:RegisterSlashHandler("Open config", "^$", "CreatePanel")
+
+	self:RestorePosition(self.db.profile.x, self.db.profile.y, self.db.profile.anchor)
 	self.noresize = true
+	self.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
 	self:SetText("Control Freak")
-	self:SetManyAttributes("type", "macro", "macrotext", macrotext, "ctrl-macrotext1", "/script ControlFreak.CreatePanel()")
+	self:SetManyAttributes("type", "macro", "macrotext", self.db.profile.macrotext)
 	self:SetScript("OnDragStart", self.OnDragStart)
 	self:SetScript("OnDragStop", self.OnDragStop)
 	self:SetScript("OnEnter", self.OnEnter)
@@ -40,19 +59,15 @@ function ControlFreak:Initialize()
 	updateframe:Hide()
 
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("UNIT_AURA")
 
 	self:OnUpdate(true)
 end
 
 
-function ControlFreak:GetMacro()
-	return macrotext
-end
-
-
 function ControlFreak:OnDragStart(button)
-	if self.locked then return end
+	if self.db.profile.locked then return end
 	self:StartMoving()
 	self.isMoving = true
 end
@@ -62,6 +77,7 @@ function ControlFreak:OnDragStop()
 	if not self.isMoving then return end
 	self:StopMovingOrSizing()
 	self.isMoving = false
+	self.db.profile.x, self.db.profile.y, self.db.profile.anchor = self:GetPosition()
 end
 
 
@@ -72,7 +88,7 @@ function ControlFreak:OnEnter()
 	if y < (sy/2) then y1, y2 = y2, y1 end
  	GameTooltip:SetOwner(self, "ANCHOR_NONE")
 	GameTooltip:SetPoint(y1..x1, self, y2..x1)
-	GameTooltip:SetText("Ctrl-click to open config")
+	GameTooltip:SetText(self.tooltiptext)
 end
 
 
@@ -92,6 +108,34 @@ function ControlFreak:StopTimer()
 	updateframe:Hide()
 	updating = false
 	self:OnUpdate(true)
+end
+
+
+function ControlFreak:PLAYER_REGEN_DISABLED()
+	self.combatwarn:Show()
+	self:RegisterEvent("PLAYER_REGEN_ENABLED")
+end
+
+
+function ControlFreak:PLAYER_REGEN_ENABLED()
+	if self.macroupdated then self:SetAttribute("macrotext", self.db.profile.macrotext) end
+	self.macroupdated = nil
+	self.combatwarn:Hide()
+end
+
+
+function ControlFreak:PLAYER_TARGET_CHANGED()
+	targetexists = UnitExists("target")
+	targetisenemy = targetexists and UnitIsEnemy("player", "target")
+	targetdead = targetexists and UnitIsDead("target")
+	isvalid.target = targtypes[UnitCreatureType("target")]
+
+	if (not focusexists and not targetexists)
+		or focusdead and not targetexists
+		or targetdead and not focusexists
+		or focusdead and targetdead then
+			self:StopTimer()
+	elseif not updating then self:StartTimer() end
 end
 
 
@@ -139,18 +183,18 @@ function ControlFreak:OnUpdate(elapsed)
 	local hp = focusexists and UnitHealth("focus")
 	if hp and hp ~= lasthp then lasthp, lasthptime = hp, GetTime() end
 
-	local alpha, color, note, range, unittag = 0.5, "default", "Control Freak", "", ""
+	local alpha, color, note, range, unittag = self.db.profile.alpha, "default", "Control Freak", "", ""
 	local unit
 	if focusisenemy and not focusdead then unit = "focus" end
 	if unit then
-		if not isvalid[unit] then color, note = "grey", "Invalid"
+		if not isvalid[unit] then color, note, tiptext = "grey", "Invalid"
 		else
 			if IsSpellInRange(spellname, unit) == 0 then range = "*" end
 			if lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
 			elseif controlled[unit] then
 				local _, _, _, _, _, _, timeLeft = UnitDebuff(unit, controlled[unit])
 				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft or 0) or "Controlled"
-				if timeLeft and timeLeft <= TIMETHRESHOLD then alpha = 1.0 end
+				if timeLeft and timeLeft <= self.db.profile.breakthreshold then alpha = 1.0 end
 			elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "orange", "Loose"
 			else alpha, color, note = 1.0, "green", "Ready" end
 		end
@@ -160,6 +204,16 @@ function ControlFreak:OnUpdate(elapsed)
 	-- target dead
 	-- target type
 	end
+
+	local setfocus = not InCombatLockdown() and not focusexists
+	local castfocus = focusisenemy and not focusdead
+	local casttarget = InCombatLockdown() and (not focusexists or focusdead) and targetexists
+	local clearfocus1 = focusexists and focusdead and not (InCombatLockdown() and targetexists and not targetdead)
+	local clearfocus2 = focusexists and not focusdead
+	self.tooltiptext = (setfocus and L["Click to set focus\n"] or "")..
+		(castfocus and L["Click to cast on focus\n"] or "").. (casttarget and L["Click to cast on target\n"] or "")..
+		(clearfocus1 and L["Click to clear focus\n"] or "").. (clearfocus2 and L["Shift-click to clear focus\n"] or "")..
+		L["Type /freak to open config"]
 
 	self:SetAlpha(alpha)
 	self:SetBackdropBorderColor(unpack(colors[color]))
