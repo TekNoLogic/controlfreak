@@ -1,5 +1,5 @@
 local major = "LegoBlock-Beta0-1.0"
-local minor = tonumber(string.match("$Revision: 15 $", "(%d+)") or 1)
+local minor = tonumber(string.match("$Revision: 22 $", "(%d+)") or 1)
 
 assert(DongleStub, string.format("%s requires DongleStub.", major))
 if not DongleStub:IsNewerVersion(major, minor) then return end
@@ -21,6 +21,9 @@ local DongleFrames = DongleStub("DongleFrames-1.0")
 local TL, TR, BL, BR = "TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT"
 local L, R, C, T, B = "LEFT", "RIGHT", "CENTER", "TOP", "BOTTOM"
 local border = 4
+local f = CreateFrame('Frame')
+f:SetScript("OnEvent", function(self, event) end)
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 --[[---------------------------------------------------------------------------------
   General Library providing an alternate StartMoving() that allows you to
@@ -265,6 +268,26 @@ end
 	Begin grouping code
 	-----------------------------------------------------------------------]]
 
+local GetGroup, DelGroup
+do
+	local groups = 1
+	local free = {}
+	GetGroup = function()
+		local group = tremove(free)
+		if (not group) then
+			groups = groups + 1
+			group = DongleFrames:Create("t=Button#n=LegoGroup"..groups.."#mouse#drag=LeftButton#movable#clamp")
+			group:SetBackdrop(bg)
+			group:SetBackdropColor(0,0,0,0.4)
+		end
+		return group
+	end
+	DelGroup = function(group)
+		tinsert(free, group)
+		group:Hide()
+	end
+end
+
 local function ShouldJoinGroup(frame, group)
 	local group = legoGroups[group]
 	-- if there is no associated group it means it is a single block
@@ -276,70 +299,111 @@ local function ShouldJoinGroup(frame, group)
 		(group:GetWidth() == frame:GetWidth() and xG == xF)
 end
 
+local function JoinLegos(lego1, lego2)
+	local group = GetGroup()
+	local h, w
+	local x1, y1, x2, y2 = lego1:GetCenter(), lego2:GetCenter()
+	local h1, w1, h2, w2 = lego1:GetHeight(), lego1:GetWidth(), lego2:GetHeight(), lego2:GetWidth()
+	local b1, l1, b2, l2 = lego1:GetTop(), lego1:GetLeft(), lego2:GetTop(), lego2:GetLeft()
+    local s1, s2 = lego1:GetEffectiveScale(), lego2:GetEffectiveScale()
+	if (x1 == x2 and w1 == w2) then
+		group:SetWidth(w1)
+		group:SetHeight(h1 + h2)
+	else
+		group:SetHeight(h1)
+		group:SetWidth(w1 + w2)
+	end
+	group:ClearAllPoints()
+	group:SetPoint(TL, UIParent, BL, l1 < l2 and l1/s1 or l2/s2, b1 < b2 and b1/s1 or b2/s2)
+	lego1:SetBackdropBorderColor(0,0,0,0)
+	lego2:SetBackdropBorderColor(0,0,0,0)
+	local gName = lego1:GetName()..'#'..lego2:GetName()
+	lego1.optionsTbl.group = gName
+	lego2.optionsTbl.group = gName
+	legoGroups[gName] = group
+	group:Show()
+end
+
 local function JoinGroup(frame, group)
 	local group = legoGroups[group]
+	local newGroup
+	local gL, gR, gT, gB
+	local fL, fR, fT, fB
+	local gW, gH
+	local fW, fH
 	if not group then
+		newGroup = true
 		group = GetGroup()
+		group:SetWidth(frame:GetWidth())
+	else
+		gL, gR, gT, gB = group:GetLeft(), group:GetRight(), group:GetTop(), group:GetBottom()
+		fL, fR, fT, fB = frame:GetLeft(), frame:GetRight(), frame:GetTop(), frame:GetBottom()
+		gW, gH = group:GetWidth(), group:GetHeight()
+		fW, fH = frame:GetWidth(), frame:GetHeight()
 	end
-	local gL, gR, gT, gB = group:GetLeft(), group:GetRight(), group:GetTop(), group:GetBottom()
-	local fL, fR, fT, fB = frame:GetLeft(), frame:GetRight(), frame:GetTop(), frame:GetBottom()
-	local farLeft, farRight
+
+	gL, gR, gT, gB = group:GetLeft(), group:GetRight(), group:GetTop(), group:GetBottom()
+	fL, fR, fT, fB = frame:GetLeft(), frame:GetRight(), frame:GetTop(), frame:GetBottom()
+	gW, gH = group:GetWidth(), group:GetHeight()
+	fW, fH = frame:GetWidth(), frame:GetHeight()
+	local farLeft, top
+	if (gT == fT and gB == fB) then
+		farLeft, farRight = fL < gL and fL or gL, fR > gR and fR or gR
+		group:SetWidth(gW + fW)
+		group:ClearAllPoints()
+		group:SetPoint(BL, UIParent, BL, farLeft, gB)
+	end
+end
+
+local function LeaveGroup(lego, group)
+	-- here we leave a group and possible delete it
+	-- remove the lego name from the group name
+	-- if there's only one lego left in the group, delete the group
 end
 
 --[[-------------------------------------------------------------------------
 	Begin lego block code
 	-----------------------------------------------------------------------]]
 
--- copied from PerfectRaid, credit goes to cladhaire
-local function SavePosition(frame)
-	local f = frame
-	local optionsTbl = f.optionsTbl
-	local x,y = f:GetCenter()
-	local anchor = 'CENTER'
-	local s = f:GetEffectiveScale()
-
-	local h, w = UIParent:GetHeight(), UIParent:GetWidth()
-	local xOff, yOff, anchor = 0, 0, 'CENTER'
-	local fW, fH = f:GetWidth() / 2, f:GetHeight() / 2
-	local left, top, right, bottom = x - fW, y + fH, x + fW, y - fH
-	if (x > w/2) then -- on the right half of the screen
-		if (y > h/2) then -- top half
-			xOff = -(w - right)
-			yOff = -(h - top)
-			anchor = TR
-		else -- bottom half
-			xOff = -(w - right)
-			yOff = bottom
-			anchor = BR
-		end
-	else -- on the left half of the screen
-		if (y > h/2) then -- top half
-			xOff = left
-			yOff = -(h - top)
-			anchor = TL
-		else -- bottom half
-			xOff = left
-			yOff = bottom
-			anchor = BL
-		end
-	end
-	optionsTbl.x, optionsTbl.y, optionsTbl.anchor = xOff*s, yOff*s, anchor
+local function GetQuadrant(frame)
+	local x,y = frame:GetCenter()
+	local hhalf = (x > UIParent:GetWidth()/2) and "RIGHT" or "LEFT"
+	local vhalf = (y > UIParent:GetHeight()/2) and "TOP" or "BOTTOM"
+	return vhalf..hhalf, vhalf, hhalf
 end
 
 -- copied from PerfectRaid, credit goes to cladhaire
-local function RestorePosition(frame, x, y, anchor)
-	local f = frame
-	local h, w = UIParent:GetHeight(), UIParent:GetWidth()
-	local s = f:GetEffectiveScale()
+local function SavePosition(frame)
+	local optionsTbl = frame.optionsTbl
+	local x, y = frame:GetCenter()
+	local s = frame:GetEffectiveScale()
+	local anchor, vhalf, hhalf = GetQuadrant(frame)
+	local fW, fH = frame:GetWidth() / 2, frame:GetHeight() / 2
 
-	if not x or not y or not anchor then
-		f:ClearAllPoints()
-		f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-		return
-	end
+	local xOff = hhalf == "RIGHT" and (x + fW - UIParent:GetWidth()) or (x - fW)
+	local yOff = vhalf == "TOP" and (y + fH - UIParent:GetHeight()) or (y - fH)
+	optionsTbl.x, optionsTbl.y, optionsTbl.anchor = xOff*s, yOff*s, anchor
+end
 
-	x, y = x/s, y/s
-	f:SetPoint(anchor, UIParent, anchor, x, y)
+local protDefaults = {
+	width = minWidth,
+	height = 32,
+	appendString = '',
+}
+
+local defTbl = setmetatable({}, {
+	__index = function(t,k) return protDefaults[k] end,
+	__newindex = function(t,k,v) end, -- Don't allow saves to the default table
+})
+
+-- copied from PerfectRaid, credit goes to cladhaire
+local function RestorePosition(frame)
+	local optionsTbl = frame.optionsTbl or defTbl
+	local x, y, anchor = optionsTbl.x, optionsTbl.y, optionsTbl.anchor
+	local s = frame:GetEffectiveScale()
+
+	frame:ClearAllPoints() -- clear before setting
+	frame:SetPoint(anchor or "CENTER", UIParent, anchor or "CENTER", x and x/s or 0, y and y/s or 0)
 end
 
 local function SetManyAttributes(self, ...)
@@ -351,7 +415,7 @@ local function SetManyAttributes(self, ...)
 end
 
 local function OnDragStart(frame)
-	if InCombatLockdown() then return end -- disable moving in combat
+	if InCombatLockdown() or (frame.optionsTbl and frame.optionsTbl.locked) then return end -- disable moving in combat
 	-- here we do sticky stuff
 	StickyFrames:StartMoving(frame, legos, border, border, border, border)
 	frame.isMoving = true
@@ -375,17 +439,24 @@ local function OnDragStop(frame)
 				hB, wB = ((v:GetHeight() * sB) / sA) / 2, ((v:GetWidth() * sB) / sA) / 2
 				if (wB == wA and xB == xA) then
 					if (frame:ShouldJoinGroup(v.optionsTbl.group)) then
-						group = group .. '#' .. v.optionsTbl.group
+						if (not v.optionsTbl.group or v.optionsTbl.group == v:GetName()) then
+							JoinLegos(frame, v)
+						else
+							frame:JoinGroup(v.optionsTbl.group)
+						end
 					end
 				elseif (hA == hB and yA == yB) then
 					if (frame:ShouldJoinGroup(v.optionsTbl.group)) then
-						group = group .. '#' .. v.optionsTbl.group
+						if (not v.optionsTbl.group or v.optionsTbl.group == v:GetName()) then
+							JoinLegos(frame, v)
+						else
+							frame:JoinGroup(v.optionsTbl.group)
+						end
 					end
 				end
 			end
 		end
 	end
-	frame.optionsTbl.group = group
 	frame:SavePosition()
 	frame.isMoving = false
 end
@@ -394,7 +465,7 @@ local function SetText(self, text, noresize)
 	text = text or ''
 	self.showText = text ~= ''
 	self.Text:SetText(text)
-	if noresize or self.noresize or InCombatLockdown() then return end
+	if noresize or self.optionsTbl.noresize or InCombatLockdown() then return end
 
 	local w = minWidth
 	if self.showIcon then w = w + self.Icon:GetWidth() end
@@ -402,13 +473,29 @@ local function SetText(self, text, noresize)
 	self:SetWidth(w)
 end
 
-function LegoBlock:SetIcon(icon)
-	self.showIcon = icon and true
+-- Sets the icon texture
+local function SetIcon(self, icon)
 	self.Icon:SetTexture(icon)
-	local w = minWidth
-	if self.showIcon then w = w + self.Icon:GetWidth() end
-	if self.showText then w = w + self.Text:GetStringWidth() end
+end
+
+-- Show/hide the icon
+local function ShowIcon(self, show)
+	local w = self:GetWidth()
+	if not self.optionsTbl.showicon and show then w = w + self.Icon:GetWidth() end
+	if self.optionsTbl.showicon and not show then w = w - self.Icon:GetWidth() end
+	self.optionsTbl.showIcon = show
+	if self.optionsTbl.showIcon then frame.Icon:Show() else frame.Icon:Hide() end
 	self:SetWidth(w)
+end
+
+local function SetDB(self, db)
+	self.optionsTbl = db
+	self:SetWidth(db.width or minWidth)
+	self:SetHeight(db.height or 32)
+	if db.showText then self.Text:Show() else self.Text:Hide() end
+	if db.showIcon then self.Icon:Show() else self.Icon:Hide() end
+	if db.hidden then self:Hide() else self:Show() end
+	self:RestorePosition()
 end
 
 --[[ LegoBlock:New
@@ -426,14 +513,15 @@ end
 			[anchor] = string,
 			[showIcon] = boolean,
 			[showText] = boolean,
+			[hidden] = boolean,
 			[group] = string separated by #,
 			[appendString] = string,
 			[savedFields] = integer indexed table with extra key/value pairs to fill in ]]--
 
-function LegoBlock:New(name,text, icon, optionsTbl)
-	local w = optionsTbl.width or minWidth
-	local h = optionsTbl.height or 32
-	local generationString = "t=Button#n=Lego"..name..'#size='..w..','..h..'#mouse#drag=LeftButton#movable#clamp'..(optionsTbl.appendString or '')
+function LegoBlock:New(name,text, icon, optionsTbl, appendString)
+	optionsTbl = optionsTbl or defTbl
+	local w, h = optionsTbl.width or defTbl.width, optionsTbl.height or defTbl.height
+	local generationString = "t=Button#n=Lego"..name..'#size='..w..','..h..'#mouse#drag=LeftButton#movable#clamp'..(appendString or '')
 	local frame = DongleFrames:Create(generationString)
 	frame.Icon = DongleFrames:Create(frame,"t=Texture#size=24,24", L, 4, 0)
 	frame.Text = DongleFrames:Create(frame,"t=FontString#inh=GameFontNormal", L, frame.Icon, R, 0, 0)
@@ -441,7 +529,7 @@ function LegoBlock:New(name,text, icon, optionsTbl)
 	frame.showText = optionsTbl.showText or false
 	frame:SetBackdrop(bg)
 	frame:SetBackdropColor(0,0,0,0.4)
-	if (frame.showIcon) then frame.Icon:Show() else frame.Icon:Hide() end
+	if frame.showIcon then frame.Icon:Show() else frame.Icon:Hide() end
 	if icon then
 		frame.showIcon = true
 		w = w + frame.Icon:GetWidth()
@@ -461,10 +549,17 @@ function LegoBlock:New(name,text, icon, optionsTbl)
 	frame:SetScript("OnDragStart", OnDragStart)
 	frame:SetScript("OnDragStop", OnDragStop)
 	frame.SetText = SetText
+	frame.SetIcon = SetIcon
 	frame.SetManyAttributes = SetManyAttributes
 	frame.SavePosition = SavePosition
 	frame.RestorePosition = RestorePosition
-	if (optionsTbl.savedFields) then
+	frame.SetDB = SetDB
+	frame.GetQuadrant = GetQuadrant
+	-- group stuff
+	frame.ShouldJoinGroup = ShouldJoinGroup
+	frame.JoinGroup = JoinGroup
+
+	if optionsTbl.savedFields then
 		local savedFields = optionsTbl.savedFields
 		for i=1,#savedFields,2 do
 			local key,val = savedFields[i], savedFields[i+1]
@@ -472,10 +567,8 @@ function LegoBlock:New(name,text, icon, optionsTbl)
 			frame[key] = val
 		end
 	end
-	frame.optionsTbl = optionsTbl
-	local x, y, anchor = optionsTbl.x or 0, optionsTbl.y or 0, optionsTbl.anchor or 'CENTER'
-	self:RestorePosition(frame, x, y, anchor)
-	tinsert(legos, frame)
+	frame:SetDB(optionsTbl)
+	table.insert(legos, frame)
 	return frame
 end
 

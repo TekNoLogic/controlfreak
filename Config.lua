@@ -72,8 +72,8 @@ function ControlFreak:CreatePanel()
 
 
 	local lockpos = DongleFrames:Create("t=CheckButton#n="..name.."Lock#p="..name.."#size=22,22#inh=OptionsCheckButtonTemplate#toplevel", "TOPLEFT", 15, -10)
-	lockpos:SetScript("OnClick", function() self.db.profile.locked = not self.db.profile.locked end)
-	lockpos:SetChecked(self.db.profile.locked)
+	lockpos:SetScript("OnClick", function() self.db.profile.frameopts.locked = not self.db.profile.frameopts.locked end)
+	lockpos:SetChecked(self.db.profile.frameopts.locked)
 	AddLabel(lockpos, "Lock frame")
 	tiptexts[lockpos] = "Locks the frame to prevent accidental movement"
 
@@ -132,7 +132,7 @@ function ControlFreak:CreatePanel()
 		editbox:SetText(self.db.profile.macrotext or "/script ChatFrame1:AddMessage(\"Error loading macro!\")")
 		alphaslider:SetValue(self.db.profile.alpha)
 		threshslider:SetValue(self.db.profile.breakthreshold)
-		lockpos:SetChecked(self.db.profile.locked)
+		lockpos:SetChecked(self.db.profile.frameopts.locked)
 
 		self.macroupdated = true
 		if not InCombatLockdown() then self:PLAYER_REGEN_ENABLED()

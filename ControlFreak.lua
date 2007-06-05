@@ -25,33 +25,40 @@ local L = {
 }
 
 local LegoBlock = DongleStub("LegoBlock-Beta0-1.0")
-local f = LegoBlock:New("ControlFreak", "Controlled (000s)")
-ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak", f)
+ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 
 
 function ControlFreak:Initialize()
+	self.lego = LegoBlock:New("ControlFreak", "Controlled (000s)", nil, nil, "#p=UIParent#inh=SecureActionButtonTemplate")
+
 	self.db = self:InitializeDB("ControlFreakDB", {profile = {
 		macrotext = macro,
 		spellname = spellname,
 		targtypes = targtypes,
-		locked = false,
 		breakthreshold = 5,
 		alpha = 0.5,
-		x = 0, y = -200, anchor = "CENTER",
+		frameopts = {
+			width = self.lego.Text:GetStringWidth(),
+			locked = false,
+			x = 0, y = -200,
+			anchor = "CENTER",
+			showIcon = false,
+			showText = true,
+			noresize = true,
+			shown = true,
+		}
 	}})
+
+	self.lego:SetDB(self.db.profile.frameopts)
 
 	local slasher = self:InitializeSlashCommand("Control Freak config", "CONTROLFREAK", "freak")
 	slasher:RegisterSlashHandler("Open config", "^$", "CreatePanel")
 
-	self:RestorePosition(self.db.profile.x, self.db.profile.y, self.db.profile.anchor)
-	self.noresize = true
-	self.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
-	self:SetText("Control Freak")
-	self:SetManyAttributes("type", "macro", "macrotext", self.db.profile.macrotext)
-	self:SetScript("OnDragStart", self.OnDragStart)
-	self:SetScript("OnDragStop", self.OnDragStop)
-	self:SetScript("OnEnter", self.OnEnter)
-	self:SetScript("OnLeave", self.OnLeave)
+	self.lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
+	self.lego:SetText("Control Freak")
+	self.lego:SetManyAttributes("type", "macro", "macrotext", self.db.profile.macrotext)
+	self.lego:SetScript("OnEnter", self.OnEnter)
+	self.lego:SetScript("OnLeave", self.OnLeave)
 
 	-- Frame for OnUpdates
 	updateframe = CreateFrame("Frame")
@@ -63,21 +70,6 @@ function ControlFreak:Initialize()
 	self:RegisterEvent("UNIT_AURA")
 
 	self:OnUpdate(true)
-end
-
-
-function ControlFreak:OnDragStart(button)
-	if self.db.profile.locked then return end
-	self:StartMoving()
-	self.isMoving = true
-end
-
-
-function ControlFreak:OnDragStop()
-	if not self.isMoving then return end
-	self:StopMovingOrSizing()
-	self.isMoving = false
-	self.db.profile.x, self.db.profile.y, self.db.profile.anchor = self:GetPosition()
 end
 
 
@@ -118,7 +110,7 @@ end
 
 
 function ControlFreak:PLAYER_REGEN_ENABLED()
-	if self.macroupdated then self:SetAttribute("macrotext", self.db.profile.macrotext) end
+	if self.macroupdated then self.lego:SetAttribute("macrotext", self.db.profile.macrotext) end
 	self.macroupdated = nil
 	self.combatwarn:Hide()
 end
@@ -210,14 +202,14 @@ function ControlFreak:OnUpdate(elapsed)
 	local casttarget = InCombatLockdown() and (not focusexists or focusdead) and targetexists
 	local clearfocus1 = focusexists and focusdead and not (InCombatLockdown() and targetexists and not targetdead)
 	local clearfocus2 = focusexists and not focusdead
-	self.tooltiptext = (setfocus and L["Click to set focus\n"] or "")..
+	self.lego.tooltiptext = (setfocus and L["Click to set focus\n"] or "")..
 		(castfocus and L["Click to cast on focus\n"] or "").. (casttarget and L["Click to cast on target\n"] or "")..
 		(clearfocus1 and L["Click to clear focus\n"] or "").. (clearfocus2 and L["Shift-click to clear focus\n"] or "")..
 		L["Type /freak to open config"]
 
-	self:SetAlpha(alpha)
-	self:SetBackdropBorderColor(unpack(colors[color]))
-	self:SetText(string.concat(colors[color].t, range, note, range))
+	self.lego:SetAlpha(alpha)
+	self.lego:SetBackdropBorderColor(unpack(colors[color]))
+	self.lego:SetText(string.concat(colors[color].t, range, note, range))
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
 end
