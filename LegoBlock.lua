@@ -1,5 +1,5 @@
-local major = "LegoBlock-Beta0-1.0"
-local minor = tonumber(string.match("$Revision: 40 $", "(%d+)") or 1)
+local major = "LegoBlock-Beta0"
+local minor = tonumber(string.match("$Revision: 43 $", "(%d+)") or 1)
 
 assert(DongleStub, string.format("%s requires DongleStub.", major))
 

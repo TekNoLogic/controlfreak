@@ -24,7 +24,7 @@ local L = {
 	["Type /freak to open config"] = "Type /freak to open config",
 }
 
-local LegoBlock = DongleStub("LegoBlock-Beta0-1.0")
+local LegoBlock = DongleStub("LegoBlock-Beta0")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 
 
