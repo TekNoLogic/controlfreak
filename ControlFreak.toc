@@ -10,14 +10,12 @@
 
 ## SavedVariables: ControlFreakDB
 
-## OptionalDeps: Dongle, OptionsHouse
-
-## LoadManagers: tekonomics
-## X-tekonomics: IsNotResting
+## OptionalDeps: Dongle, OptionHouse
 
 Dongle.lua
 DongleFrames.lua
 LegoBlock.lua
+WidgetWarlock.lua
 
 ClassMacrotexts.lua
 ControlFreak.lua

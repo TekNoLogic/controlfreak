@@ -25,6 +25,7 @@ local L = {
 }
 
 local LegoBlock = DongleStub("LegoBlock-Beta0")
+local OptionHouse = DongleStub("OptionHouse-1.0")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 
 
@@ -37,6 +38,7 @@ function ControlFreak:Initialize()
 		targtypes = targtypes,
 		breakthreshold = 5,
 		alpha = 0.5,
+		showtooltip = true,
 		frameopts = {
 			width = self.lego.Text:GetStringWidth(),
 			locked = false,
@@ -51,8 +53,13 @@ function ControlFreak:Initialize()
 
 	self.lego:SetDB(self.db.profile.frameopts)
 
+	local _, title = GetAddOnInfo("ControlFreak")
+	local author, version = GetAddOnMetadata("ControlFreak", "Author"), GetAddOnMetadata("ControlFreak", "Version")
+	local oh = OptionHouse:RegisterAddOn("Control Freak", title, author, version)
+	oh:RegisterCategory("Options", ControlFreak, "CreatePanel")
+
 	local slasher = self:InitializeSlashCommand("Control Freak config", "CONTROLFREAK", "freak")
-	slasher:RegisterSlashHandler("Open config", "^$", "CreatePanel")
+	slasher:RegisterSlashHandler("Open config", "^$", function() OptionHouse:Open("Control Freak", "Options") end)
 
 	self.lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
 	self.lego:SetText("Control Freak")
@@ -74,6 +81,7 @@ end
 
 
 function ControlFreak:OnEnter()
+	if not ControlFreak.db.profile.showtooltip then return end
 	local sx, sy, x, y = GetScreenHeight(), GetScreenWidth(), self:GetCenter()
 	local x1, y1, y2 = "RIGHT", "TOP", "BOTTOM"
 	if x < (sx/2) then x1 = "LEFT" end
