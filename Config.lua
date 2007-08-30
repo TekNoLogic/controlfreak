@@ -11,9 +11,8 @@ local ControlFreak = ControlFreak
 
 
 function ControlFreak:CreatePanel()
+	local frame = CreateFrame("Frame", "ControlFreakFrame", UIParent)
 	local name = "ControlFreakFrame"
-
-	local frame = ww.SummonOptionHouseBaseFrame(nil, name)
 
 
 	frame:SetScript("OnShow", function()
@@ -32,7 +31,7 @@ function ControlFreak:CreatePanel()
 	lockpos:SetChecked(self.db.profile.frameopts.locked)
 
 
-	local showtip = ww.SummonLabeledCheckBox("Show tooltip", 22, frame, "TOPLEFT", lockpos, "TOPRIGHT", lockposlabel:GetWidth() + 30, 0)
+	local showtip = ww.SummonLabeledCheckBox("Show tooltip", 22, frame, "TOPLEFT", lockpos, "TOPLEFT", 133, 0)
 	ww.EnslaveTooltip(showtip, "Show help tooltip on hover")
 	showtip:SetScript("OnClick", function() self.db.profile.showtooltip = not self.db.profile.showtooltip end)
 	showtip:SetChecked(self.db.profile.showtooltip)
@@ -57,21 +56,25 @@ function ControlFreak:CreatePanel()
 	self.combatwarn = ww.EnslaveLabel(editbox, "|cffff0000Macro changes will not apply until combat ends!", "BOTTOMRIGHT", editbox, "TOPRIGHT", -5, 0)
 
 
-	local threshslider = ww.SummonSlider(frame, "Break Threshold", 0, 10, "TOPLEFT", lockpos, "BOTTOMLEFT", -5, -15)
+	local threshslider, threshslidertext = ww.SummonSlider(frame, "Break Threshold: "..self.db.profile.breakthreshold.." sec", 0, 10, "TOPLEFT", lockpos, "BOTTOMLEFT", -5, -15)
 	ww.EnslaveTooltip(threshslider, "Time (in seconds) before spell breaks to unfade frame.")
---~ 	threshslider:SetMinMaxValues(0, 10)
 	threshslider:SetValue(self.db.profile.breakthreshold)
 	threshslider:SetValueStep(1)
-	threshslider:SetScript("OnValueChanged", function() self.db.profile.breakthreshold = threshslider:GetValue() end)
+	threshslider:SetScript("OnValueChanged", function()
+		self.db.profile.breakthreshold = threshslider:GetValue()
+		threshslidertext:SetText("Break Threshold: "..self.db.profile.breakthreshold.." sec")
+	end)
 
 
-	local alphaslider = ww.SummonSlider(frame, "Alpha", "0%", "100%", "LEFT", threshslider, "RIGHT", 10, 0)
+	local alpha = math.floor(self.db.profile.alpha*100 + .5)
+	local alphaslider, alphaslidertext = ww.SummonSlider(frame, "Alpha: "..alpha.."%", "0%", "100%", "LEFT", threshslider, "RIGHT", 10, 0)
 	ww.EnslaveTooltip(alphaslider, "Alpha level to fade frame to when focus is controlled, dead, or not set.")
---~ 	alphaslider:SetMinMaxValues(0, 1)
 	alphaslider:SetValue(self.db.profile.alpha)
 	alphaslider:SetValueStep(0.05)
 	alphaslider:SetScript("OnValueChanged", function()
 		self.db.profile.alpha = alphaslider:GetValue()
+		local alpha = math.floor(self.db.profile.alpha*100 + .5)
+		alphaslidertext:SetText("Alpha: "..alpha.."%")
 		self:OnUpdate(true)
 	end)
 

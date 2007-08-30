@@ -16,7 +16,7 @@ WidgetWarlock.TooltipBorderBG = {
 }
 
 
-WidgetWarlock.HrizontalSliderBG = {
+WidgetWarlock.HorizontalSliderBG = {
 	bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
 	edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
 	edgeSize = 8, tile = true, tileSize = 8,
@@ -47,6 +47,7 @@ end
 function WidgetWarlock.SummonLabeledCheckBox(label, size, parent, ...)
 	local check = WidgetWarlock.SummonCheckBox(size, parent, ...)
 	local fs = WidgetWarlock.EnslaveLabel(check, label)
+	check:SetHitRectInsets(0, -1 * fs:GetStringWidth() - 5, 0, 0)
 	return check, fs
 end
 
@@ -58,7 +59,7 @@ function WidgetWarlock.SummonSlider(parent, label, lowvalue, highvalue, ...)
 	if select(1, ...) then slider:SetPoint(...) end
 	slider:SetOrientation("HORIZONTAL")
 	slider:SetThumbTexture("Interface\\Buttons\\UI-SliderBar-Button-Horizontal")
-	slider:SetBackdrop(WidgetWarlock.HrizontalSliderBG)
+	slider:SetBackdrop(WidgetWarlock.HorizontalSliderBG)
 	local text = WidgetWarlock.SummonFontString(slider, nil, "ARTWORK", "GameFontNormalSmall", label, "BOTTOM", slider, "TOP")
 	local low  = WidgetWarlock.SummonFontString(slider, nil, "ARTWORK", "GameFontHighlightSmall", lowvalue, "TOPLEFT", slider, "BOTTOMLEFT", 2, 3)
 	local high = WidgetWarlock.SummonFontString(slider, nil, "ARTWORK", "GameFontHighlightSmall", highvalue, "TOPRIGHT", slider, "BOTTOMRIGHT", -2, 3)
@@ -67,15 +68,6 @@ function WidgetWarlock.SummonSlider(parent, label, lowvalue, highvalue, ...)
 	else slider:SetMinMaxValues(lowvalue, highvalue) end
 
 	return slider, text, low, high
-end
-
-
-function WidgetWarlock.SummonOptionHouseBaseFrame(frametype, name)
-	local frame = CreateFrame(frametype or "Frame", name, OptionHouseOptionsFrame)
-	frame:SetWidth(630)
-	frame:SetHeight(305)
-	frame:SetFrameStrata("HIGH")
-	return frame
 end
 
 
@@ -99,7 +91,7 @@ end
 
 function WidgetWarlock.EnslaveLabel(frame, text, a1, aframe, a2, dx, dy)
 	if not a1 then a1, aframe, a2, dx, dy = "LEFT", frame, "RIGHT", 5, 0 end
-	local fs = frame:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+	local fs = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	fs:SetPoint(a1, aframe, a2, dx, dy)
 	fs:SetText(text)
 	return fs
