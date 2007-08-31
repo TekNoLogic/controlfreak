@@ -169,7 +169,7 @@ end
   Begin Library Implementation
 ---------------------------------------------------------------------------]]
 local major = "LegoBlock-Beta0"
-local minor = tonumber(string.match("$Revision: 43 $", "(%d+)") or 1)
+local minor = tonumber(string.match("$Revision: 51 $", "(%d+)") or 1)
 
 assert(DongleStub, string.format("%s requires DongleStub.", major))
 
@@ -450,12 +450,12 @@ local function CreateBlock(name, width, height)
 	f:RegisterForDrag('LeftButton')
 	f:SetClampedToScreen(true)
 	local icon = f:CreateTexture()
-	icon:SetHeight(24)
-	icon:SetWidth(24)
-	icon:SetPoint(L, f, L, 4, 0)
+	icon:SetHeight(16)
+	icon:SetWidth(16)
+	icon:SetPoint(L, f, L, 8, 0)
 	f.Icon = icon
 	local text = f:CreateFontString(nil, nil, "GameFontNormal")
-	text:SetPoint(L, icon, R, 0, 0)
+	text:SetPoint(L, icon, R, 4, 0)
 	f.Text = text
 	f:SetBackdrop(bg)
 	f:SetBackdropColor(0,0,0,0.3)
@@ -551,9 +551,9 @@ local function OnDragStop(frame)
 	if InCombatLockdown() or not frame.isMoving then return end -- disable moving in combat, if not moving, jump out
 	-- here we do sticky stuff
 	StickyFrames:StopMoving(frame)
-	StickyFrames:AnchorFrame(frame)
 	frame:StopMovingOrSizing()
 	frame:SavePosition()
+	frame:RestorePosition()
 	frame.isMoving = false
 end
 
@@ -570,6 +570,7 @@ local function SetText(self, text, noresize)
 	local w = minWidth
 	if self.showIcon then w = w + self.Icon:GetWidth() end
 	if self.showText then w = w + self.Text:GetStringWidth() end
+	self.Text:SetWidth(w)
 	self:SetWidth(w)
 end
 
