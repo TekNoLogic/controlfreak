@@ -68,6 +68,19 @@ CONTROLFREAKMACROTEXT = [[
 /clearfocus [target=focus,dead]
 ]]
 
+elseif class == "Hunter" then
+CONTROLFREAKTARGETTYPES = {Beast = true, Humanoid = true, Undead = true, Demon = true, Elemental = true, Dragonkin = true}
+CONTROLFREAKSPELL = "Freezing Trap Effect"
+CONTROLFREAKMACROTEXT = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/cast [target=focus,exists,nodead,harm] Freezing Trap
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [combat] Freezing Trap
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+]]
+
 end
 
 -- TODO:
