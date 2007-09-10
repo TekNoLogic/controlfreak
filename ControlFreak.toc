@@ -13,6 +13,7 @@
 ## OptionalDeps: Dongle, OptionHouse
 
 Dongle.lua
+OptionHouse.lua
 DongleFrames.lua
 LegoBlock.lua
 WidgetWarlock.lua
