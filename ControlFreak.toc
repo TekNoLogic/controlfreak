@@ -12,11 +12,15 @@
 
 ## OptionalDeps: Dongle, OptionHouse
 
+## LoadManagers: AddonLoader
+## X-LoadOn-NotResting: true
+## X-LoadOn-Slash: /freak
+
 Dongle.lua
 OptionHouse.lua
 DongleFrames.lua
 LegoBlock.lua
-WidgetWarlock.lua
+WidgetWarlock\WidgetWarlock.xml
 
 ClassMacrotexts.lua
 ControlFreak.lua

@@ -27,6 +27,7 @@ local L = {
 local LegoBlock = DongleStub("LegoBlock-Beta0")
 local OptionHouse = DongleStub("OptionHouse-1.0")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
+if tekDebug then ControlFreak:EnableDebug(1, tekDebug:GetFrame("ControlFreak")) end
 
 
 function ControlFreak:Initialize()
@@ -141,11 +142,18 @@ end
 
 function ControlFreak:PLAYER_FOCUS_CHANGED()
 	focusexists = UnitExists("focus")
+	self:Debug(1, "PLAYER_FOCUS_CHANGED", focusexists)
 	focusisenemy = focusexists and UnitIsEnemy("player", "focus")
 	focusdead = focusexists and UnitIsDead("focus")
 	isvalid.focus = targtypes[UnitCreatureType("focus")]
 
 	lasthp, lasthptime = focusexists and UnitHealth("focus"), 0
+
+	if focusexists then self:UNIT_AURA("UNIT_AURA", "focus")
+	else
+		controlled.focus = nil
+		self:OnUpdate(true)
+	end
 
 	if (not focusexists and not targetexists)
 		or focusdead and not targetexists
@@ -159,10 +167,12 @@ end
 function ControlFreak:UNIT_AURA(event, unit)
  	if unit ~= "focus" then return end
 
+	self:Debug(1, "UNIT_AURA", controlled[unit])
 	local wascontrolled = (controlled[unit] ~= nil)
 	controlled[unit] = nil
 	for i=1,maxdebuffs do
-		if UnitDebuff(unit, i) == spellname then controlled[unit] = i end
+		self:Debug(1, UnitDebuff(unit, i))
+		if UnitDebuff(unit, i) == self.db.profile.spellname then controlled[unit] = i end
 	end
 
 	if wascontrolled ~= (controlled[unit]~= nil) then self:OnUpdate(true) end
@@ -189,7 +199,7 @@ function ControlFreak:OnUpdate(elapsed)
 	if unit then
 		if not isvalid[unit] then color, note, tiptext = "grey", "Invalid"
 		else
-			if IsSpellInRange(spellname, unit) == 0 then range = "*" end
+			if IsSpellInRange(self.db.profile.spellname, unit) == 0 then range = "*" end
 			if lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
 			elseif controlled[unit] then
 				local _, _, _, _, _, _, timeLeft = UnitDebuff(unit, controlled[unit])
