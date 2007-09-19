@@ -129,7 +129,7 @@ function ControlFreak:PLAYER_TARGET_CHANGED()
 	targetexists = UnitExists("target")
 	targetisenemy = targetexists and UnitIsEnemy("player", "target")
 	targetdead = targetexists and UnitIsDead("target")
-	isvalid.target = targtypes[UnitCreatureType("target")]
+	isvalid.target = self.db.profile.targtypes[UnitCreatureType("target")]
 
 	if (not focusexists and not targetexists)
 		or focusdead and not targetexists
@@ -145,7 +145,7 @@ function ControlFreak:PLAYER_FOCUS_CHANGED()
 	self:Debug(1, "PLAYER_FOCUS_CHANGED", focusexists)
 	focusisenemy = focusexists and UnitIsEnemy("player", "focus")
 	focusdead = focusexists and UnitIsDead("focus")
-	isvalid.focus = targtypes[UnitCreatureType("focus")]
+	isvalid.focus = self.db.profile.targtypes[UnitCreatureType("focus")]
 
 	lasthp, lasthptime = focusexists and UnitHealth("focus"), 0
 
