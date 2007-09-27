@@ -25,7 +25,7 @@ local L = {
 }
 
 local LegoBlock = DongleStub("LegoBlock-Beta0")
-local OptionHouse = LibStub("OptionHouse-1.1"))
+local OptionHouse = LibStub("OptionHouse-1.1")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 if tekDebug then ControlFreak:EnableDebug(1, tekDebug:GetFrame("ControlFreak")) end
 
