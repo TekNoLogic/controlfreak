@@ -31,7 +31,7 @@
 --  providing a mechanism for library upgrades through minor version
 --  differences.
 --
---  The implementation of DongleStub, including the source code, 
+--  The implementation of DongleStub, including the source code,
 --  documentation and related data, is placed into the public domain.
 --
 --  The original author is James N. Whitehead II
@@ -49,8 +49,8 @@ local g = getfenv(0)
 
 if not g.DongleStub or g.DongleStub:IsNewerVersion(major, minor) then
 	local lib = setmetatable({}, {
-		__call = function(t,k) 
-			if type(t.versions) == "table" and t.versions[k] then 
+		__call = function(t,k)
+			if type(t.versions) == "table" and t.versions[k] then
 				return t.versions[k].instance
 			else
 				error("Cannot find a library with name '"..tostring(k).."'", 2)
@@ -73,7 +73,7 @@ if not g.DongleStub or g.DongleStub:IsNewerVersion(major, minor) then
 		local oldmajor,oldminor = versionData.instance:GetVersion()
 		return minor > oldminor
 	end
-	
+
 	local function NilCopyTable(src, dest)
 		for k,v in pairs(dest) do dest[k] = nil end
 		for k,v in pairs(src) do dest[k] = v end
@@ -111,7 +111,7 @@ if not g.DongleStub or g.DongleStub:IsNewerVersion(major, minor) then
 				["instance"] = newInstance,
 				["deactivate"] = deactivate,
 			}
-			
+
 			self.versions[major] = versionData
 			if type(activate) == "function" then
 				table.insert(self.log, string.format("Activate: %s, %s", major, minor))
@@ -119,12 +119,12 @@ if not g.DongleStub or g.DongleStub:IsNewerVersion(major, minor) then
 			end
 			return newInstance
 		end
-		
+
 		local oldDeactivate = versionData.deactivate
 		local oldInstance = versionData.instance
-		
+
 		versionData.deactivate = deactivate
-		
+
 		local skipCopy
 		if type(activate) == "function" then
 			table.insert(self.log, string.format("Activate: %s, %s", major, minor))
@@ -149,7 +149,7 @@ if not g.DongleStub or g.DongleStub:IsNewerVersion(major, minor) then
 
 	local function Activate(new, old)
 		-- This code ensures that we'll move the versions table even
-		-- if the major version names are different, in the case of 
+		-- if the major version names are different, in the case of
 		-- DongleStub
 		if not old then old = g.DongleStub end
 
@@ -159,7 +159,7 @@ if not g.DongleStub or g.DongleStub:IsNewerVersion(major, minor) then
 		end
 		g.DongleStub = new
 	end
-	
+
 	-- Actually trigger libary activation here
 	local stub = g.DongleStub or lib
 	lib = stub:Register(lib, Activate)
@@ -169,7 +169,7 @@ end
   Begin Library Implementation
 ---------------------------------------------------------------------------]]
 local major = "LegoBlock-Beta0"
-local minor = tonumber(string.match("$Revision: 54 $", "(%d+)") or 1)
+local minor = 79
 
 assert(DongleStub, string.format("%s requires DongleStub.", major))
 
@@ -185,7 +185,6 @@ local bg = {
 local minWidth = 20
 local legos
 local legoGroups
-local scaleSet = false
 local LegoBlock = {}
 
 local TL, TR, BL, BR = "TOPLEFT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT"
@@ -519,7 +518,7 @@ end
 -- originally copied from PerfectRaid, credit goes to cladhaire
 -- changed to use code by Mikk, all credit goes to him
 local function RestorePosition(frame)
-	if not scaleSet then return end
+	if not IsLoggedIn() then return end
 	local optionsTbl = frame.optionsTbl or defTbl
 	local x, y, anchor, s = optionsTbl.x, optionsTbl.y, optionsTbl.anchor, optionsTbl.scale
 	if s then
@@ -669,27 +668,22 @@ function LegoBlock:New(name,text, icon, optionsTbl, appendString)
 	return frame
 end
 
-local f
-
 -- [[ Misc library related stuff ]]--
 
 local function Activate(new, old)
 	new.legos = old and old.legos or {}
 	new.legoGroups = old and old.legoGroups or {}
-	new.scaleSet = old and old.scaleSet or scaleSet
 	new.frame = old and old.frame
 	legos = new.legos
 	legoGroups = new.legoGroups
-	f = new.frame
-	if not f then
-		f = CreateFrame('Frame')
-		f:SetScript("OnEvent", function(self, event)
-			LegoBlock.scaleSet = true
-			scaleSet = true;
+	if not IsLoggedIn() and not new.frame then
+		new.frame = CreateFrame('Frame')
+		new.frame:SetScript("OnEvent", function(self, event)
 			restoreAllPositions();
-			self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+			self:UnregisterEvent("PLAYER_LOGIN")
+			self:SetScript("OnEvent", nil)
 		end)
-		f:RegisterEvent("PLAYER_ENTERING_WORLD")
+		new.frame:RegisterEvent("PLAYER_LOGIN")
 	end
 end
 
