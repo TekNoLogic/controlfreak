@@ -1,20 +1,33 @@
 ﻿
 string.concat = strconcat
 
-local macro, spellname, targtypes = CONTROLFREAKMACROTEXT, CONTROLFREAKSPELL, CONTROLFREAKTARGETTYPES
-CONTROLFREAKMACROTEXT, CONTROLFREAKTARGETTYPES, CONTROLFREAKSPELL = nil, nil, nil
-if not macro then return end
 
+------------------------------
+--      Are you local?      --
+------------------------------
 
 local lasthp, lasthptime, focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
-local maxdebuffs, damageinterval, isvalid, controlled, colors = 40, 3, {}, {}, {
+local maxdebuffs, damageinterval, isvalid, controlled, colors, defaultprofiles = 40, 3, {}, {}, {
 	default = {1.0, 0.8, 0.0, t = ""},
 	red     = {1.0, 0.0, 0.0, t = "|cffff0000"},
 	orange  = {1.0, 0.4, 0.0, t = "|cffff6600"},
 	green   = {0.0, 1.0, 0.0, t = "|cff00ff00"},
 	cyan    = {0.0, 0.8, 1.0, t = "|cff00ccff"},
 	grey    = {0.8, 0.8, 0.8, t = "|cff808080"},
+}, {
+	Druid   = "Druid - Hibernate",
+	Mage    = "Mage - Polymorph",
+	Priest  = "Priest - Shackle Undead",
+	Warlock = "Warlock - Banish",
+	Paladin = "Paladin - Turn Undead",
+	Hunter  = "Hunter - Freezing Trap",
 }
+
+
+----------------------------
+--      Localization      --
+----------------------------
+
 local L = {
 	["Click to set focus\n"] = "Click to set focus\n",
 	["Click to cast on focus\n"] = "Click to cast on focus\n",
@@ -24,40 +37,47 @@ local L = {
 	["Type /freak to open config"] = "Type /freak to open config",
 }
 
+
+-------------------------
+--      Namespace      --
+-------------------------
+
 local LegoBlock = DongleStub("LegoBlock-Beta0")
 local OptionHouse = LibStub("OptionHouse-1.1")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 if tekDebug then ControlFreak:EnableDebug(1, tekDebug:GetFrame("ControlFreak")) end
 
 
+---------------------------
+--      Init/Enable      --
+---------------------------
+
 function ControlFreak:Initialize()
 	self.lego = LegoBlock:New("ControlFreak", "Controlled (000s)", nil, nil, "#p=UIParent#inh=SecureActionButtonTemplate")
 
-	self.db = self:InitializeDB("ControlFreakDB", {profile = {
-		macrotext = macro,
-		spellname = spellname,
-		targtypes = targtypes,
-		breakthreshold = 5,
-		alpha = 0.5,
-		showtooltip = true,
-		frameopts = {
-			width = self.lego.Text:GetStringWidth(),
-			locked = false,
-			x = 0, y = -200,
-			anchor = "CENTER",
-			showIcon = false,
-			showText = true,
-			noresize = true,
-			shown = true,
-		}
-	}})
+	self.db = self:InitializeDB("ControlFreakDB", {char = {
+			breakthreshold = 5,
+			alpha = 0.5,
+			showtooltip = true,
+			frameopts = {
+				width = self.lego.Text:GetStringWidth(),
+				locked = false,
+				x = 0, y = -200,
+				anchor = "CENTER",
+				showIcon = false,
+				showText = true,
+				noresize = true,
+				shown = true,
+			}}}, defaultprofiles[UnitClass("player")] or "char")
+	self:LoadDefaultMacros()
 
-	self.lego:SetDB(self.db.profile.frameopts)
+	self.lego:SetDB(self.db.char.frameopts)
 
 	local _, title = GetAddOnInfo("ControlFreak")
 	local author, version = GetAddOnMetadata("ControlFreak", "Author"), GetAddOnMetadata("ControlFreak", "Version")
 	local oh = OptionHouse:RegisterAddOn("Control Freak", title, author, version)
 	oh:RegisterCategory("Options", ControlFreak, "CreatePanel")
+	oh:RegisterCategory("Profiles", ControlFreak, "CreateProfilePanel")
 
 	local slasher = self:InitializeSlashCommand("Control Freak config", "CONTROLFREAK", "freak")
 	slasher:RegisterSlashHandler("Open config", "^$", function() OptionHouse:Open("Control Freak", "Options") end)
@@ -82,7 +102,7 @@ end
 
 
 function ControlFreak:OnEnter()
-	if not ControlFreak.db.profile.showtooltip then return end
+	if not ControlFreak.db.char.showtooltip then return end
 	local sx, sy, x, y = GetScreenHeight(), GetScreenWidth(), self:GetCenter()
 	local x1, y1, y2 = "RIGHT", "TOP", "BOTTOM"
 	if x < (sx/2) then x1 = "LEFT" end
@@ -193,7 +213,7 @@ function ControlFreak:OnUpdate(elapsed)
 	local hp = focusexists and UnitHealth("focus")
 	if hp and hp ~= lasthp then lasthp, lasthptime = hp, GetTime() end
 
-	local alpha, color, note, range, unittag = self.db.profile.alpha, "default", "Control Freak", "", ""
+	local alpha, color, note, range, unittag = self.db.char.alpha, "default", "Control Freak", "", ""
 	local unit
 	if focusisenemy and not focusdead then unit = "focus" end
 	if unit then
@@ -204,7 +224,7 @@ function ControlFreak:OnUpdate(elapsed)
 			elseif controlled[unit] then
 				local _, _, _, _, _, _, timeLeft = UnitDebuff(unit, controlled[unit])
 				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft or 0) or "Controlled"
-				if timeLeft and timeLeft <= self.db.profile.breakthreshold then alpha = 1.0 end
+				if timeLeft and timeLeft <= self.db.char.breakthreshold then alpha = 1.0 end
 			elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "orange", "Loose"
 			else alpha, color, note = 1.0, "green", "Ready" end
 		end

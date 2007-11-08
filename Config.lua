@@ -4,9 +4,7 @@
 if not ControlFreak then return end
 
 
-local DongleFrames = DongleStub("DongleFrames-1.0")
 local ww = LibStub("WidgetWarlock-Alpha1")
-local ControlFreak = ControlFreak
 
 
 function ControlFreak:CreatePanel()
@@ -34,36 +32,36 @@ function ControlFreak:CreatePanel()
 	ww:EnslaveLabel(lockpos, "Lock frame")
 	lockpos:SetHitRectInsets(0, -100, 0, 0)
 	ww:EnslaveTooltip(lockpos, "Locks the frame to prevent accidental movement")
-	lockpos:SetScript("OnClick", function() self.db.profile.frameopts.locked = not self.db.profile.frameopts.locked end)
-	lockpos:SetChecked(self.db.profile.frameopts.locked)
+	lockpos:SetScript("OnClick", function() self.db.char.frameopts.locked = not self.db.char.frameopts.locked end)
+	lockpos:SetChecked(self.db.char.frameopts.locked)
 
 
 	local showtip = ww:SummonCheckBox(displaygroup, 22, "TOPLEFT", lockpos, "TOPLEFT", 150, 0)
 	showtip:SetHitRectInsets(0, -100, 0, 0)
 	ww:EnslaveLabel(showtip, "Show tooltip")
 	ww:EnslaveTooltip(showtip, "Show help tooltip on hover")
-	showtip:SetScript("OnClick", function() self.db.profile.showtooltip = not self.db.profile.showtooltip end)
-	showtip:SetChecked(self.db.profile.showtooltip)
+	showtip:SetScript("OnClick", function() self.db.char.showtooltip = not self.db.char.showtooltip end)
+	showtip:SetChecked(self.db.char.showtooltip)
 
 
-	local threshslider, threshslidertext = ww:SummonSlider(frame, "Break Threshold: "..self.db.profile.breakthreshold.." sec", 0, 10, "TOPLEFT", lockpos, "BOTTOMLEFT", 5, -15)
+	local threshslider, threshslidertext = ww:SummonSlider(frame, "Break Threshold: "..self.db.char.breakthreshold.." sec", 0, 10, "TOPLEFT", lockpos, "BOTTOMLEFT", 5, -15)
 	ww:EnslaveTooltip(threshslider, "Time (in seconds) before spell breaks to unfade frame.")
-	threshslider:SetValue(self.db.profile.breakthreshold)
+	threshslider:SetValue(self.db.char.breakthreshold)
 	threshslider:SetValueStep(1)
 	threshslider:SetScript("OnValueChanged", function()
-		self.db.profile.breakthreshold = threshslider:GetValue()
-		threshslidertext:SetText("Break Threshold: "..self.db.profile.breakthreshold.." sec")
+		self.db.char.breakthreshold = threshslider:GetValue()
+		threshslidertext:SetText("Break Threshold: "..self.db.char.breakthreshold.." sec")
 	end)
 
 
-	local alpha = math.floor(self.db.profile.alpha*100 + .5)
+	local alpha = math.floor(self.db.char.alpha*100 + .5)
 	local alphaslider, alphaslidertext = ww:SummonSlider(frame, "Alpha: "..alpha.."%", "0%", "100%", "LEFT", threshslider, "RIGHT", 15, 0)
 	ww:EnslaveTooltip(alphaslider, "Alpha level to fade frame to when focus is controlled, dead, or not set.")
-	alphaslider:SetValue(self.db.profile.alpha)
+	alphaslider:SetValue(self.db.char.alpha)
 	alphaslider:SetValueStep(0.05)
 	alphaslider:SetScript("OnValueChanged", function()
-		self.db.profile.alpha = alphaslider:GetValue()
-		local alpha = math.floor(self.db.profile.alpha*100 + .5)
+		self.db.char.alpha = alphaslider:GetValue()
+		local alpha = math.floor(self.db.char.alpha*100 + .5)
 		alphaslidertext:SetText("Alpha: "..alpha.."%")
 		self:OnUpdate(true)
 	end)
@@ -71,7 +69,6 @@ function ControlFreak:CreatePanel()
 
 	local debufflabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormalSmall", "Debuff", "TOPLEFT", displaygroup, "BOTTOMLEFT", 5, -10)
 	local debuff = ww:SummonEditBox(frame, 200, "LEFT", debufflabel, "RIGHT", 10, 0)
-	debuff:SetText(self.db.profile.spellname)
 	debuff:SetScript("OnTextChanged", function() self.db.profile.spellname = debuff:GetText() end)
 	debuff:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 
@@ -86,7 +83,6 @@ function ControlFreak:CreatePanel()
 	editbox:SetBackdropColor(.1,.1,.1,.3)
 	editbox:SetMultiLine(true)
 	editbox:SetAutoFocus(false)
-	editbox:SetText(self.db.profile.macrotext or "/script ChatFrame1:AddMessage(\"Error loading macro!\")")
 	editbox:SetScript("OnTextChanged", function()
 		self.db.profile.macrotext = editbox:GetText()
 		self.macroupdated = true
@@ -103,18 +99,24 @@ function ControlFreak:CreatePanel()
 
 	local a1, af, a2, dx, dy = "TOPLEFT", checkgroup, "TOPLEFT", 5, -5
 	local checks = {}
-	for i,v in ipairs{"Beast", "Critter", "Demon", "Elemental", "Dragonkin", "Giant", "Humanoid", "Mechanical", "Undead", "Unknown"} do
+	local creaturetypes = {"Beast", "Critter", "Demon", "Elemental", "Dragonkin", "Giant", "Humanoid", "Mechanical", "Undead", "Unknown"}
+	for i,v in ipairs(creaturetypes) do
 		local check = ww:SummonCheckBox(checkgroup, 22, a1, af, a2, dx, dy)
 		checks[v] = check
 		ww:EnslaveLabel(check, v)
 		check:SetHitRectInsets(0, -100, 0, 0)
 		check:SetScript("OnClick", function() self.db.profile.targtypes[v] = not self.db.profile.targtypes[v] end)
-		check:SetChecked(self.db.profile.targtypes[v])
 
 		if i == 5 then a1, af, a2, dx, dy = "TOPLEFT", checks.Beast, "TOPLEFT", 150, 0
 		else a1, af, a2, dx, dy = "TOPLEFT", check, "BOTTOMLEFT", 0, 4 end
 	end
 
+	frame:SetScript("OnShow", function()
+		ww.FadeIn(frame, 0.5)
+		debuff:SetText(self.db.profile.spellname)
+		editbox:SetText(self.db.profile.macrotext or "/script ChatFrame1:AddMessage(\"Error loading macro!\")")
+		for i,v in ipairs(creaturetypes) do checks[v]:SetChecked(self.db.profile.targtypes[v]) end
+	end)
 
 	return frame
 end
