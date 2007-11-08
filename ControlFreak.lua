@@ -21,6 +21,7 @@ local maxdebuffs, damageinterval, isvalid, controlled, colors, defaultprofiles =
 	Warlock = "Warlock - Banish",
 	Paladin = "Paladin - Turn Undead",
 	Hunter  = "Hunter - Freezing Trap",
+	Rogue   = "Rogue - Sap",
 }
 
 

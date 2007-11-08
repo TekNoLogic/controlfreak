@@ -119,6 +119,22 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.targtypes = {Beast = true, Humanoid = true, Undead = true, Demon = true, Elemental = true, Dragonkin = true}
 	end
 
+	-- Rogue -- Sap --
+	self.db:SetProfile("Rogue - Sap")
+	if not self.db.profile.macrotext then
+		self.db.profile.macrotext = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/cast [target=focus,exists,nodead,harm,nocombat] Sap
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [nocombat] Sap
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+]]
+		self.db.profile.spellname = "Sap"
+		self.db.profile.targtypes = {Humanoid = true}
+	end
+
 	self.db:SetProfile(profile)
 end
 
