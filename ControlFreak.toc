@@ -18,10 +18,9 @@
 
 Dongle.lua
 OptionHouse.lua
-DongleFrames.lua
-LegoBlock.lua
 WidgetWarlock\WidgetWarlock.xml
 
+Block.lua
 ControlFreak.lua
 ClassMacrotexts.lua
 Config.lua

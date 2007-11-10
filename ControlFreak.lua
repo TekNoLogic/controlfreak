@@ -43,7 +43,6 @@ local L = {
 --      Namespace      --
 -------------------------
 
-local LegoBlock = DongleStub("LegoBlock-Beta0")
 local OptionHouse = LibStub("OptionHouse-1.1")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 if tekDebug then ControlFreak:EnableDebug(1, tekDebug:GetFrame("ControlFreak")) end
@@ -54,25 +53,13 @@ if tekDebug then ControlFreak:EnableDebug(1, tekDebug:GetFrame("ControlFreak")) 
 ---------------------------
 
 function ControlFreak:Initialize()
-	self.lego = LegoBlock:New("ControlFreak", "Controlled (000s)", nil, nil, "#p=UIParent#inh=SecureActionButtonTemplate")
-
 	self.db = self:InitializeDB("ControlFreakDB", {char = {
 			breakthreshold = 5,
 			alpha = 0.5,
 			showtooltip = true,
-			frameopts = {
-				width = self.lego.Text:GetStringWidth(),
-				locked = false,
-				x = 0, y = -200,
-				anchor = "CENTER",
-				showIcon = false,
-				showText = true,
-				noresize = true,
-				shown = true,
-			}}}, defaultprofiles[UnitClass("player")] or "char")
+			frameopts = {locked = false}
+		}}, defaultprofiles[UnitClass("player")] or "char")
 	self:LoadDefaultMacros()
-
-	self.lego:SetDB(self.db.char.frameopts)
 
 	local _, title = GetAddOnInfo("ControlFreak")
 	local author, version = GetAddOnMetadata("ControlFreak", "Author"), GetAddOnMetadata("ControlFreak", "Version")
@@ -83,12 +70,6 @@ function ControlFreak:Initialize()
 	local slasher = self:InitializeSlashCommand("Control Freak config", "CONTROLFREAK", "freak")
 	slasher:RegisterSlashHandler("Open config", "^$", function() OptionHouse:Open("Control Freak", "Options") end)
 
-	self.lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
-	self.lego:SetText("Control Freak")
-	self.lego:SetManyAttributes("type", "macro", "macrotext", self.db.profile.macrotext)
-	self.lego:SetScript("OnEnter", self.OnEnter)
-	self.lego:SetScript("OnLeave", self.OnLeave)
-
 	-- Frame for OnUpdates
 	updateframe = CreateFrame("Frame")
 	updateframe:SetScript("OnUpdate", self.OnUpdate)
@@ -97,6 +78,22 @@ function ControlFreak:Initialize()
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("UNIT_AURA")
+end
+
+
+function ControlFreak:Enable()
+	self.lego = TekLegoBlock
+	TekLegoBlock = nil
+	self.lego:SetText("Controlled (000s)")
+	self.lego:Resize()
+	self.lego:SetDB(self.db.char.frameopts)
+
+	self.lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
+	self.lego:SetText("Control Freak")
+	self.lego:SetAttribute("type", "macro")
+	self.lego:SetAttribute("macrotext", self.db.profile.macrotext)
+	self.lego:SetScript("OnEnter", self.OnEnter)
+	self.lego:SetScript("OnLeave", self.OnLeave)
 
 	self:OnUpdate(true)
 end
@@ -201,7 +198,7 @@ end
 
 
 function ControlFreak:OnUpdate(elapsed)
-	self = ControlFreak
+	local self = ControlFreak
 	self.elapsed = self.elapsed or 0
 
 	if type(elapsed) == "number" then self.elapsed = self.elapsed + elapsed end
