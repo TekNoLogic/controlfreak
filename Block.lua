@@ -11,12 +11,12 @@ local db, moving
 --      Main Frame      --
 --------------------------
 
-local frame = CreateFrame('Button', nil, UIParent, 'SecureActionButtonTemplate')
+local frame = CreateFrame("Button", "ControlFreakFrame", UIParent, "SecureActionButtonTemplate")
 frame:SetHeight(24)
 
 frame:EnableMouse(true)
 frame:SetMovable(true)
-frame:RegisterForDrag('LeftButton')
+frame:RegisterForDrag("LeftButton")
 frame:SetClampedToScreen(true)
 
 frame:SetBackdrop({
@@ -64,9 +64,3 @@ function frame:Resize()
 	frame:SetWidth(text:GetStringWidth() + 8)
 end
 
-
-----------------------
---      Global      --
-----------------------
-
-TekLegoBlock = frame

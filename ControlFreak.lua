@@ -6,7 +6,7 @@ string.concat = strconcat
 --      Are you local?      --
 ------------------------------
 
-local lasthp, lasthptime, focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
+local lego, lasthp, lasthptime, focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
 local maxdebuffs, damageinterval, isvalid, controlled, colors, defaultprofiles = 40, 3, {}, {}, {
 	default = {1.0, 0.8, 0.0, t = ""},
 	red     = {1.0, 0.0, 0.0, t = "|cffff0000"},
@@ -82,18 +82,17 @@ end
 
 
 function ControlFreak:Enable()
-	self.lego = TekLegoBlock
-	TekLegoBlock = nil
-	self.lego:SetText("Controlled (000s)")
-	self.lego:Resize()
-	self.lego:SetDB(self.db.char.frameopts)
+	lego = ControlFreakFrame
+	lego:SetText("Controlled (000s)")
+	lego:Resize()
+	lego:SetDB(self.db.char.frameopts)
 
-	self.lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
-	self.lego:SetText("Control Freak")
-	self.lego:SetAttribute("type", "macro")
-	self.lego:SetAttribute("macrotext", self.db.profile.macrotext)
-	self.lego:SetScript("OnEnter", self.OnEnter)
-	self.lego:SetScript("OnLeave", self.OnLeave)
+	lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
+	lego:SetText("Control Freak")
+	lego:SetAttribute("type", "macro")
+	lego:SetAttribute("macrotext", self.db.profile.macrotext)
+	lego:SetScript("OnEnter", self.OnEnter)
+	lego:SetScript("OnLeave", self.OnLeave)
 
 	self:OnUpdate(true)
 end
@@ -137,7 +136,7 @@ end
 
 
 function ControlFreak:PLAYER_REGEN_ENABLED()
-	if self.macroupdated then self.lego:SetAttribute("macrotext", self.db.profile.macrotext) end
+	if self.macroupdated then lego:SetAttribute("macrotext", self.db.profile.macrotext) end
 	self.macroupdated = nil
 	self.combatwarn:Hide()
 end
@@ -238,14 +237,14 @@ function ControlFreak:OnUpdate(elapsed)
 	local casttarget = InCombatLockdown() and (not focusexists or focusdead) and targetexists
 	local clearfocus1 = focusexists and focusdead and not (InCombatLockdown() and targetexists and not targetdead)
 	local clearfocus2 = focusexists and not focusdead
-	self.lego.tooltiptext = (setfocus and L["Click to set focus\n"] or "")..
+	lego.tooltiptext = (setfocus and L["Click to set focus\n"] or "")..
 		(castfocus and L["Click to cast on focus\n"] or "").. (casttarget and L["Click to cast on target\n"] or "")..
 		(clearfocus1 and L["Click to clear focus\n"] or "").. (clearfocus2 and L["Shift-click to clear focus\n"] or "")..
 		L["Type /freak to open config"]
 
-	self.lego:SetAlpha(alpha)
-	self.lego:SetBackdropBorderColor(unpack(colors[color]))
-	self.lego:SetText(string.concat(colors[color].t, range, note, range))
+	lego:SetAlpha(alpha)
+	lego:SetBackdropBorderColor(unpack(colors[color]))
+	lego:SetText(string.concat(colors[color].t, range, note, range))
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
 end
