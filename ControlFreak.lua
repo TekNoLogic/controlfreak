@@ -7,7 +7,7 @@ string.concat = strconcat
 ------------------------------
 
 local lego, lasthp, lasthptime, focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
-local maxdebuffs, damageinterval, mydebuffs, isvalid, controlled, colors, defaultprofiles = 40, 3, {}, {}, {}, {
+local maxdebuffs, damageinterval, mydebuffs, isvalid, controlled, colors, defaultprofiles, presetprofiles = 40, 3, {}, {}, {}, {
 	default = {1.0, 0.8, 0.0, t = ""},
 	red     = {1.0, 0.0, 0.0, t = "|cffff0000"},
 	orange  = {1.0, 0.4, 0.0, t = "|cffff6600"},
@@ -22,6 +22,15 @@ local maxdebuffs, damageinterval, mydebuffs, isvalid, controlled, colors, defaul
 	Paladin = "Paladin - Turn Undead",
 	Hunter  = "Hunter - Freezing Trap",
 	Rogue   = "Rogue - Sap",
+}, {
+	["Druid - Hibernate"] = true,
+	["Mage - Polymorph"] = true,
+	["Mage - Random Polymorph"] = true,
+	["Priest - Shackle Undead"] = true,
+	["Warlock - Banish"] = true,
+	["Paladin - Turn Undead"] = true,
+	["Hunter - Freezing Trap"] = true,
+	["Rogue - Sap"] = true,
 }
 
 
@@ -82,6 +91,13 @@ end
 
 
 function ControlFreak:Enable()
+	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	self:RegisterEvent("PLAYER_REGEN_ENABLED")
+
+	self:RegisterMessage("DONGLE_PROFILE_CHANGED", "ProfileLoaded")
+	self:RegisterMessage("DONGLE_PROFILE_COPIED", "ProfileLoaded")
+	self:RegisterMessage("DONGLE_PROFILE_DELETED", "ProfileDeleted")
+
 	lego = ControlFreakFrame
 	lego:SetText("Controlled (000s)")
 	lego:Resize()
@@ -97,6 +113,34 @@ function ControlFreak:Enable()
 	self:OnUpdate(true)
 end
 
+
+------------------------
+--      Profiles      --
+------------------------
+
+function ControlFreak:ProfileLoaded(msg, db, parent)
+	if parent ~= self then return end
+
+	self.macroupdated = true
+	if not InCombatLockdown() then self:PLAYER_REGEN_ENABLED() end
+
+	self:ParseDebuffs(string.split(",", self.db.profile.spellname))
+end
+
+
+function ControlFreak:ProfileDeleted(msg, db, parent, sv, profile)
+	if parent ~= self or not presetprofiles[profile] then return end
+
+	self:UnregisterMessage("DONGLE_PROFILE_CHANGED", "ProfileLoaded")
+	self:UnregisterMessage("DONGLE_PROFILE_COPIED", "ProfileLoaded")
+
+	self:LoadDefaultMacros()
+
+	self:RegisterMessage("DONGLE_PROFILE_CHANGED", "ProfileLoaded")
+	self:RegisterMessage("DONGLE_PROFILE_COPIED", "ProfileLoaded")
+end
+
+
 function ControlFreak:ParseDebuffs(...)
 	for i in pairs(mydebuffs) do mydebuffs[i] = nil end
 	for i=1,select("#", ...) do
@@ -107,23 +151,12 @@ function ControlFreak:ParseDebuffs(...)
 end
 
 
-function ControlFreak:StartTimer()
-	updateframe:Show()
-	updating = true
-	self:OnUpdate(true)
-end
-
-
-function ControlFreak:StopTimer()
-	updateframe:Hide()
-	updating = false
-	self:OnUpdate(true)
-end
-
+------------------------------
+--      Event Handlers      --
+------------------------------
 
 function ControlFreak:PLAYER_REGEN_DISABLED()
 	self.combatwarn:Show()
-	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 end
 
 
@@ -185,6 +218,24 @@ function ControlFreak:UNIT_AURA(event, unit)
 	end
 
 	if wascontrolled ~= (controlled[unit]~= nil) then self:OnUpdate(true) end
+end
+
+
+------------------------------
+--      Status Updater      --
+------------------------------
+
+function ControlFreak:StartTimer()
+	updateframe:Show()
+	updating = true
+	self:OnUpdate(true)
+end
+
+
+function ControlFreak:StopTimer()
+	updateframe:Hide()
+	updating = false
+	self:OnUpdate(true)
 end
 
 

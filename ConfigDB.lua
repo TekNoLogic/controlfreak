@@ -59,21 +59,11 @@ function ControlFreak:CreateProfilePanel()
 		self.db:SetProfile(profile)
 		current:SetText(profile)
 		ToggleButtons(profile)
-
-		self.macroupdated = true
-		if not InCombatLockdown() then self:PLAYER_REGEN_ENABLED() end
-
-		self:ParseDebuffs(string.split(",", self.db.profile.spellname))
 	end)
 	copybutton:SetScript("OnClick", function()
 		self.db:ResetProfile()
 		self.db:CopyProfile(UIDropDownMenu_GetSelectedValue(selected))
 		profiles = self.db:GetProfiles()
-
-		self.macroupdated = true
-		if not InCombatLockdown() then self:PLAYER_REGEN_ENABLED() end
-
-		self:ParseDebuffs(string.split(",", self.db.profile.spellname))
 	end)
 	deletebutton:SetScript("OnClick", function()
 		self.db:DeleteProfile(UIDropDownMenu_GetSelectedValue(selected))

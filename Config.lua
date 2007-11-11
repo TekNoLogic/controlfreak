@@ -12,18 +12,6 @@ function ControlFreak:CreatePanel()
 	local name = "ControlFreakFrame"
 
 
-	frame:SetScript("OnShow", function()
-		if InCombatLockdown() then
-			self.combatwarn:Show()
-			self:RegisterEvent("PLAYER_REGEN_ENABLED")
-		else
-			self.combatwarn:Hide()
-			self:RegisterEvent("PLAYER_REGEN_DISABLED")
-		end
-	end)
-	frame:SetScript("OnHide", function() self:UnregisterEvent("PLAYER_REGEN_DISABLED") end)
-
-
 	local displaygrouplabel = ww:SummonFontString(frame, "OVERLAY", "GameFontHighlightSmall", "Display Options", "TOPLEFT", frame, "TOPLEFT", 20, -5)
 	local displaygroup = ww:SummonGroupBox(frame, 305, 75, "TOPLEFT", displaygrouplabel, "BOTTOMLEFT", -15, 0)
 
@@ -95,6 +83,7 @@ function ControlFreak:CreatePanel()
 	editbox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 	local macrolabel = ww:EnslaveLabel(editbox, "Macro", "BOTTOMLEFT", editbox, "TOPLEFT", 5, 0)
 	self.combatwarn = ww:EnslaveLabel(editbox, "|cffff0000Macro changes will not apply until combat ends!", "BOTTOMRIGHT", editbox, "TOPRIGHT", -5, 0)
+	if InCombatLockdown() then self.combatwarn:Show() else self.combatwarn:Hide() end
 
 
 	local checkgrouplabel = ww:SummonFontString(frame, "OVERLAY", "GameFontHighlightSmall", "Creature Types", "TOPLEFT", frame, "TOPLEFT", 330, -5)
