@@ -70,6 +70,7 @@ function ControlFreak:Initialize()
 			frameopts = {locked = false}
 		},
 		profile = {
+			spellname = "",
 			macrotext = "/freak",
 			targtypes = {},
 		},
