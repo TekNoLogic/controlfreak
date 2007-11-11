@@ -74,7 +74,7 @@ function ControlFreak:Initialize()
 			macrotext = "/freak",
 			targtypes = {},
 		},
-	}, defaultprofiles[UnitClass("player")] or "char")
+	}, defaultprofiles[UnitClass("player")])
 	self:LoadDefaultMacros()
 
 	local _, title = GetAddOnInfo("ControlFreak")

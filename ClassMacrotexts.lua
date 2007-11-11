@@ -4,18 +4,12 @@
 -- Hunter: fear beast
 -- Warlock: fear
 
-local function tableincludes(t, v)
-	for i,val in pairs(t) do if val == v then return true end end
-end
-
-
 function ControlFreak:LoadDefaultMacros()
 	local profile = self.db:GetCurrentProfile()
-	local profiles = self.db:GetProfiles()
 
 	-- Druid - Hibernate --
-	if not tableincludes(profiles, "Druid - Hibernate") then
-		self.db:SetProfile("Druid - Hibernate")
+	self.db:SetProfile("Druid - Hibernate")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -32,8 +26,8 @@ function ControlFreak:LoadDefaultMacros()
 	end
 
 	-- Mage - Polymorph --
-	if not tableincludes(profiles, "Mage - Polymorph") then
-		self.db:SetProfile("Mage - Polymorph")
+	self.db:SetProfile("Mage - Polymorph")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -50,8 +44,8 @@ function ControlFreak:LoadDefaultMacros()
 	end
 
 	-- Mage - Random Polymorph --
-	if not tableincludes(profiles, "Mage - Random Polymorph") then
-		self.db:SetProfile("Mage - Random Polymorph")
+	self.db:SetProfile("Mage - Random Polymorph")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -68,8 +62,8 @@ function ControlFreak:LoadDefaultMacros()
 	end
 
 	-- Priest - Shackle Undead --
-	if not tableincludes(profiles, "Priest - Shackle Undead") then
-		self.db:SetProfile("Priest - Shackle Undead")
+	self.db:SetProfile("Priest - Shackle Undead")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -86,8 +80,8 @@ function ControlFreak:LoadDefaultMacros()
 	end
 
 	-- Warlock - Banish --
-	if not tableincludes(profiles, "Warlock - Banish") then
-		self.db:SetProfile("Warlock - Banish")
+	self.db:SetProfile("Warlock - Banish")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -104,8 +98,8 @@ function ControlFreak:LoadDefaultMacros()
 	end
 
 	-- Paladin - Turn Undead --
-	if not tableincludes(profiles, "Paladin - Turn Undead") then
-		self.db:SetProfile("Paladin - Turn Undead")
+	self.db:SetProfile("Paladin - Turn Undead")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -122,8 +116,8 @@ function ControlFreak:LoadDefaultMacros()
 	end
 
 	-- Hunter - Freezing Trap --
-	if not tableincludes(profiles, "Hunter - Freezing Trap") then
-		self.db:SetProfile("Hunter - Freezing Trap")
+	self.db:SetProfile("Hunter - Freezing Trap")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -140,8 +134,8 @@ function ControlFreak:LoadDefaultMacros()
 	end
 
 	-- Rogue -- Sap --
-	if not tableincludes(profiles, "Rogue - Sap") then
-		self.db:SetProfile("Rogue - Sap")
+	self.db:SetProfile("Rogue - Sap")
+	if not self.db.profile.macrotext then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -157,7 +151,7 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.targtypes = {Humanoid = true}
 	end
 
-	if profile ~= self.db:GetCurrentProfile() then self.db:SetProfile(profile) end
+	self.db:SetProfile(profile)
 end
 
 
