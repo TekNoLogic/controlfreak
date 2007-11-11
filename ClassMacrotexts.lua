@@ -5,7 +5,7 @@
 -- Warlock: fear
 
 local function tableincludes(t, v)
-	for i,val in pairs(t) do if val == v then return true end
+	for i,val in pairs(t) do if val == v then return true end end
 end
 
 
