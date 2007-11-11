@@ -43,8 +43,26 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
-	-- Mage - Random Polymorph --
-	self.db:SetProfile("Mage - Random Polymorph")
+	-- Mage - Random Sheep/Pig --
+	self.db:SetProfile("Mage - Random Sheep/Pig")
+	if self.db.profile.macrotext == "/freak" then
+		self.db.profile.macrotext = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/castrandom [target=focus,exists,nodead,harm] Polymorph, Polymorph: Pig
+/stopmacro [target=focus,exists,nodead,harm]
+/castrandom [combat,harm,exists,nodead] Polymorph, Polymorph: Pig
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
+]]
+		self.db.profile.spellname = "Polymorph, Polymorph: Pig, Polymorph: Turtle"
+		self.db.profile.targtypes = {Beast = true, Humanoid = true}
+	end
+
+	-- Mage - Random Sheep/Pig/Turtle --
+	self.db:SetProfile("Mage - Random Sheep/Pig/Turtle")
 	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
