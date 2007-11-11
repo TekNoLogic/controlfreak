@@ -266,12 +266,12 @@ function ControlFreak:OnUpdate(elapsed)
 	if unit then
 		if not isvalid[unit] then color, note, tiptext = "grey", "Invalid"
 		else
-			if IsSpellInRange(self.db.profile.spellname, unit) == 0 then range = "*" end
-			if lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
-			elseif controlled[unit] then
+			if mydebuffs[1] and IsSpellInRange(mydebuffs[1], unit) == 0 then range = "*" end
+			if controlled[unit] then
 				local _, _, _, _, _, _, timeLeft = UnitDebuff(unit, controlled[unit])
-				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft or 0) or "Controlled"
+				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft) or "Controlled"
 				if timeLeft and timeLeft <= self.db.char.breakthreshold then alpha = 1.0 end
+			elseif lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
 			elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "orange", "Loose"
 			else alpha, color, note = 1.0, "green", "Ready" end
 		end
