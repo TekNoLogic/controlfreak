@@ -36,7 +36,7 @@ function ControlFreak:LoadDefaultMacros()
 /clearfocus [target=focus,dead]
 ]]
 		self.db.profile.spellname = "Polymorph"
-		self.db.profile.targtypes = {Beast = true, Humanoid = true, Critter = true}
+		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
 	-- Mage - Random Polymorph --
@@ -52,7 +52,7 @@ function ControlFreak:LoadDefaultMacros()
 /clearfocus [target=focus,dead]
 ]]
 		self.db.profile.spellname = "Polymorph"
-		self.db.profile.targtypes = {Beast = true, Humanoid = true, Critter = true}
+		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
 	-- Priest - Shackle Undead --
