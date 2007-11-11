@@ -70,6 +70,7 @@ function ControlFreak:Initialize()
 			frameopts = {locked = false}
 		},
 		profile = {
+			macrotext = "/freak",
 			targtypes = {},
 		},
 	}, defaultprofiles[UnitClass("player")] or "char")
