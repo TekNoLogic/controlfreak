@@ -15,6 +15,7 @@ local frame = CreateFrame("Button", "ControlFreakFrame", UIParent, "SecureAction
 frame:SetHeight(24)
 
 frame:EnableMouse(true)
+frame:RegisterForClicks("AnyUp")
 frame:SetMovable(true)
 frame:RegisterForDrag("LeftButton")
 frame:SetClampedToScreen(true)
