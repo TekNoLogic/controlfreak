@@ -62,12 +62,17 @@ if tekDebug then ControlFreak:EnableDebug(1, tekDebug:GetFrame("ControlFreak")) 
 ---------------------------
 
 function ControlFreak:Initialize()
-	self.db = self:InitializeDB("ControlFreakDB", {char = {
+	self.db = self:InitializeDB("ControlFreakDB", {
+		char = {
 			breakthreshold = 5,
 			alpha = 0.5,
 			showtooltip = true,
 			frameopts = {locked = false}
-		}}, defaultprofiles[UnitClass("player")] or "char")
+		},
+		profile = {
+			targtypes = {},
+		},
+	}, defaultprofiles[UnitClass("player")] or "char")
 	self:LoadDefaultMacros()
 
 	local _, title = GetAddOnInfo("ControlFreak")
@@ -131,8 +136,8 @@ end
 function ControlFreak:ProfileDeleted(msg, db, parent, sv, profile)
 	if parent ~= self or not presetprofiles[profile] then return end
 
-	self:UnregisterMessage("DONGLE_PROFILE_CHANGED", "ProfileLoaded")
-	self:UnregisterMessage("DONGLE_PROFILE_COPIED", "ProfileLoaded")
+	self:UnregisterMessage("DONGLE_PROFILE_CHANGED")
+	self:UnregisterMessage("DONGLE_PROFILE_COPIED")
 
 	self:LoadDefaultMacros()
 
