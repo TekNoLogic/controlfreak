@@ -7,7 +7,7 @@ string.concat = strconcat
 ------------------------------
 
 local lego, lasthp, lasthptime, focusisenemy, focusdead, focusexists, targetisenemy, targetdead, targetexists, text, frame, updateframe, updating
-local maxdebuffs, damageinterval, isvalid, controlled, colors, defaultprofiles = 40, 3, {}, {}, {
+local maxdebuffs, damageinterval, mydebuffs, isvalid, controlled, colors, defaultprofiles = 40, 3, {}, {}, {}, {
 	default = {1.0, 0.8, 0.0, t = ""},
 	red     = {1.0, 0.0, 0.0, t = "|cffff0000"},
 	orange  = {1.0, 0.4, 0.0, t = "|cffff6600"},
@@ -35,7 +35,7 @@ local L = {
 	["Click to cast on target\n"] = "Click to cast on target\n",
 	["Click to clear focus\n"] = "Click to clear focus\n",
 	["Shift-click to clear focus\n"] = "Shift-click to clear focus\n",
-	["Type /freak to open config"] = "Type /freak to open config",
+	["Type /freak or right-click to open config"] = "Type /freak or right-click to open config",
 }
 
 
@@ -87,14 +87,25 @@ function ControlFreak:Enable()
 	lego:Resize()
 	lego:SetDB(self.db.char.frameopts)
 
-	lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak to open config"]
+	lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak or right-click to open config"]
 	lego:SetText("Control Freak")
 	lego:SetAttribute("type", "macro")
 	lego:SetAttribute("macrotext", self.db.profile.macrotext)
 	lego:SetScript("OnEnter", self.OnEnter)
 	lego:SetScript("OnLeave", self.OnLeave)
 
+	self:ParseDebuffs(string.split(",", self.db.profile.spellname))
+
 	self:OnUpdate(true)
+end
+
+function ControlFreak:ParseDebuffs(...)
+	for i in pairs(mydebuffs) do mydebuffs[i] = nil end
+	for i=1,select("#", ...) do
+		local v = string.trim((select(i, ...)))
+		mydebuffs[v] = true
+		self:PrintF("Add debuff %q", v)
+	end
 end
 
 
@@ -188,8 +199,8 @@ function ControlFreak:UNIT_AURA(event, unit)
 	local wascontrolled = (controlled[unit] ~= nil)
 	controlled[unit] = nil
 	for i=1,maxdebuffs do
-		self:Debug(1, UnitDebuff(unit, i))
-		if UnitDebuff(unit, i) == self.db.profile.spellname then controlled[unit] = i end
+		self:Debug(1, i, UnitDebuff(unit, i))
+		if mydebuffs[UnitDebuff(unit, i)] then controlled[unit] = i end
 	end
 
 	if wascontrolled ~= (controlled[unit]~= nil) then self:OnUpdate(true) end
@@ -240,7 +251,7 @@ function ControlFreak:OnUpdate(elapsed)
 	lego.tooltiptext = (setfocus and L["Click to set focus\n"] or "")..
 		(castfocus and L["Click to cast on focus\n"] or "").. (casttarget and L["Click to cast on target\n"] or "")..
 		(clearfocus1 and L["Click to clear focus\n"] or "").. (clearfocus2 and L["Shift-click to clear focus\n"] or "")..
-		L["Type /freak to open config"]
+		L["Type /freak or right-click to open config"]
 
 	lego:SetAlpha(alpha)
 	lego:SetBackdropBorderColor(unpack(colors[color]))

@@ -69,7 +69,11 @@ function ControlFreak:CreatePanel()
 
 	local debufflabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormalSmall", "Debuff", "TOPLEFT", displaygroup, "BOTTOMLEFT", 5, -10)
 	local debuff = ww:SummonEditBox(frame, 200, "LEFT", debufflabel, "RIGHT", 10, 0)
-	debuff:SetScript("OnTextChanged", function() self.db.profile.spellname = debuff:GetText() end)
+	ww:EnslaveTooltip(debuff, "Debuffs to track for control.  Separate multiple debuffs with commas.")
+	debuff:SetScript("OnEditFocusLost", function()
+		self.db.profile.spellname = debuff:GetText()
+		self:ParseDebuffs(string.split(",", self.db.profile.spellname))
+	end)
 	debuff:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 
 
@@ -83,7 +87,7 @@ function ControlFreak:CreatePanel()
 	editbox:SetBackdropColor(.1,.1,.1,.3)
 	editbox:SetMultiLine(true)
 	editbox:SetAutoFocus(false)
-	editbox:SetScript("OnTextChanged", function()
+	editbox:SetScript("OnEditFocusLost", function()
 		self.db.profile.macrotext = editbox:GetText()
 		self.macroupdated = true
 		if not InCombatLockdown() then self:PLAYER_REGEN_ENABLED() end

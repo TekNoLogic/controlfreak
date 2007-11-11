@@ -18,6 +18,8 @@ function ControlFreak:LoadDefaultMacros()
 /cast [combat,harm,exists,nodead] Hibernate
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
 		self.db.profile.spellname = "Hibernate"
 		self.db.profile.targtypes = {Beast = true, Dragonkin = true}
@@ -34,8 +36,10 @@ function ControlFreak:LoadDefaultMacros()
 /cast [combat,harm,exists,nodead] Polymorph
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
-		self.db.profile.spellname = "Polymorph"
+		self.db.profile.spellname = "Polymorph, Polymorph: Pig, Polymorph: Turtle"
 		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
@@ -50,8 +54,10 @@ function ControlFreak:LoadDefaultMacros()
 /castrandom [combat,harm,exists,nodead] Polymorph, Polymorph: Pig, Polymorph: Turtle
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
-		self.db.profile.spellname = "Polymorph"
+		self.db.profile.spellname = "Polymorph, Polymorph: Pig, Polymorph: Turtle"
 		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
@@ -66,6 +72,8 @@ function ControlFreak:LoadDefaultMacros()
 /cast [combat,harm,exists,nodead] Shackle Undead
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
 		self.db.profile.spellname = "Shackle Undead"
 		self.db.profile.targtypes = {Undead = true}
@@ -82,6 +90,8 @@ function ControlFreak:LoadDefaultMacros()
 /cast [combat,harm,exists,nodead] Banish
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
 		self.db.profile.spellname = "Banish"
 		self.db.profile.targtypes = {Demon = true, Elemental = true}
@@ -98,6 +108,8 @@ function ControlFreak:LoadDefaultMacros()
 /cast [combat,harm,exists,nodead] Turn Undead
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
 		self.db.profile.spellname = "Turn Undead"
 		self.db.profile.targtypes = {Undead = true}
@@ -114,6 +126,8 @@ function ControlFreak:LoadDefaultMacros()
 /cast [combat] Freezing Trap
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
 		self.db.profile.spellname = "Freezing Trap Effect"
 		self.db.profile.targtypes = {Beast = true, Humanoid = true, Undead = true, Demon = true, Elemental = true, Dragonkin = true}
@@ -130,6 +144,8 @@ function ControlFreak:LoadDefaultMacros()
 /cast [nocombat] Sap
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
 ]]
 		self.db.profile.spellname = "Sap"
 		self.db.profile.targtypes = {Humanoid = true}
