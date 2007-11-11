@@ -161,14 +161,14 @@ end
 ------------------------------
 
 function ControlFreak:PLAYER_REGEN_DISABLED()
-	self.combatwarn:Show()
+	if self.combatwarn then self.combatwarn:Show() end
 end
 
 
 function ControlFreak:PLAYER_REGEN_ENABLED()
 	if self.macroupdated then lego:SetAttribute("macrotext", self.db.profile.macrotext) end
 	self.macroupdated = nil
-	self.combatwarn:Hide()
+	if self.combatwarn then self.combatwarn:Hide() end
 end
 
 
