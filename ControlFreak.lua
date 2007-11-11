@@ -104,7 +104,7 @@ function ControlFreak:ParseDebuffs(...)
 	for i=1,select("#", ...) do
 		local v = string.trim((select(i, ...)))
 		mydebuffs[v] = true
-		self:PrintF("Add debuff %q", v)
+		self:DebugF(1, "Add debuff %q", v)
 	end
 end
 
