@@ -9,7 +9,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Druid - Hibernate --
 	self.db:SetProfile("Druid - Hibernate")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -27,7 +27,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Mage - Polymorph --
 	self.db:SetProfile("Mage - Polymorph")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -45,7 +45,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Mage - Random Polymorph --
 	self.db:SetProfile("Mage - Random Polymorph")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -63,7 +63,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Priest - Shackle Undead --
 	self.db:SetProfile("Priest - Shackle Undead")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -81,7 +81,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Warlock - Banish --
 	self.db:SetProfile("Warlock - Banish")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -99,7 +99,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Paladin - Turn Undead --
 	self.db:SetProfile("Paladin - Turn Undead")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -117,7 +117,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Hunter - Freezing Trap --
 	self.db:SetProfile("Hunter - Freezing Trap")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
@@ -135,7 +135,7 @@ function ControlFreak:LoadDefaultMacros()
 
 	-- Rogue -- Sap --
 	self.db:SetProfile("Rogue - Sap")
-	if not self.db.profile.macrotext then
+	if self.db.profile.macrotext == "/freak" then
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
