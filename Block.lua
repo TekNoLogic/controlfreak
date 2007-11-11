@@ -65,3 +65,25 @@ function frame:Resize()
 	frame:SetWidth(text:GetStringWidth() + 8)
 end
 
+
+-----------------------
+--      Tooltip      --
+-----------------------
+
+local tiptext
+function frame:SetTooltip(tip)
+	tiptext = tip
+end
+
+
+frame:SetScript("OnLeave", function() GameTooltip:Hide() end)
+frame:SetScript("OnEnter", function(self)
+	if not ControlFreak.db.char.showtooltip or not tiptext then return end
+	local sx, sy, x, y = GetScreenHeight(), GetScreenWidth(), self:GetCenter()
+	local x1, y1, y2 = "RIGHT", "TOP", "BOTTOM"
+	if x < (sx/2) then x1 = "LEFT" end
+	if y < (sy/2) then y1, y2 = y2, y1 end
+ 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
+	GameTooltip:SetPoint(y1..x1, self, y2..x1)
+	GameTooltip:SetText(tiptext)
+end)

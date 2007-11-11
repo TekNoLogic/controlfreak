@@ -87,12 +87,10 @@ function ControlFreak:Enable()
 	lego:Resize()
 	lego:SetDB(self.db.char.frameopts)
 
-	lego.tooltiptext = L["Click to set focus\n"]..L["Type /freak or right-click to open config"]
+	lego:SetTooltip(L["Click to set focus\n"]..L["Type /freak or right-click to open config"])
 	lego:SetText("Control Freak")
 	lego:SetAttribute("type", "macro")
 	lego:SetAttribute("macrotext", self.db.profile.macrotext)
-	lego:SetScript("OnEnter", self.OnEnter)
-	lego:SetScript("OnLeave", self.OnLeave)
 
 	self:ParseDebuffs(string.split(",", self.db.profile.spellname))
 
@@ -106,23 +104,6 @@ function ControlFreak:ParseDebuffs(...)
 		mydebuffs[v] = true
 		self:DebugF(1, "Add debuff %q", v)
 	end
-end
-
-
-function ControlFreak:OnEnter()
-	if not ControlFreak.db.char.showtooltip then return end
-	local sx, sy, x, y = GetScreenHeight(), GetScreenWidth(), self:GetCenter()
-	local x1, y1, y2 = "RIGHT", "TOP", "BOTTOM"
-	if x < (sx/2) then x1 = "LEFT" end
-	if y < (sy/2) then y1, y2 = y2, y1 end
- 	GameTooltip:SetOwner(self, "ANCHOR_NONE")
-	GameTooltip:SetPoint(y1..x1, self, y2..x1)
-	GameTooltip:SetText(self.tooltiptext)
-end
-
-
-function ControlFreak:OnLeave()
-	GameTooltip:Hide()
 end
 
 
@@ -248,10 +229,10 @@ function ControlFreak:OnUpdate(elapsed)
 	local casttarget = InCombatLockdown() and (not focusexists or focusdead) and targetexists
 	local clearfocus1 = focusexists and focusdead and not (InCombatLockdown() and targetexists and not targetdead)
 	local clearfocus2 = focusexists and not focusdead
-	lego.tooltiptext = (setfocus and L["Click to set focus\n"] or "")..
+	lego:SetTooltip((setfocus and L["Click to set focus\n"] or "")..
 		(castfocus and L["Click to cast on focus\n"] or "").. (casttarget and L["Click to cast on target\n"] or "")..
 		(clearfocus1 and L["Click to clear focus\n"] or "").. (clearfocus2 and L["Shift-click to clear focus\n"] or "")..
-		L["Type /freak or right-click to open config"]
+		L["Type /freak or right-click to open config"])
 
 	lego:SetAlpha(alpha)
 	lego:SetBackdropBorderColor(unpack(colors[color]))
