@@ -224,7 +224,10 @@ function ControlFreak:UNIT_AURA(event, unit)
 		if mydebuffs[UnitDebuff(unit, i)] then controlled[unit] = i end
 	end
 
-	if wascontrolled ~= (controlled[unit]~= nil) then self:OnUpdate(true) end
+	if wascontrolled ~= (controlled[unit]~= nil) then
+		if not controlled[unit] then PlaySoundFile("Interface\\AddOns\\ControlFreak\\break.wav") end
+		self:OnUpdate(true)
+	end
 end
 
 
