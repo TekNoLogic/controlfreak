@@ -115,6 +115,26 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.targtypes = {Demon = true, Elemental = true}
 	end
 
+	-- Warlock - Seduction --
+	self.db:SetProfile("Warlock - Seduction")
+	if self.db.profile.macrotext == "/freak" then
+		self.db.profile.macrotext = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/petstay
+/petfollow
+/cast [pet:succubus,target=focus,exists,harm] Seduction
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [pet:succubus, combat,harm,exists,nodead] Seduction
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
+]]
+		self.db.profile.spellname = "Seduction"
+		self.db.profile.targtypes = {Humanoid = true}
+	end
+
 	-- Paladin - Turn Undead --
 	self.db:SetProfile("Paladin - Turn Undead")
 	if self.db.profile.macrotext == "/freak" then
