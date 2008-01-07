@@ -1,7 +1,17 @@
-﻿-- Size: 630 305
--- Offset: 190 -103
-
+﻿
 if not ControlFreak then return end
+
+
+----------------------------
+--      Localization      --
+----------------------------
+
+local L = CONTROLFREAK_LOCALE
+CONTROLFREAK_LOCALE = nil
+
+
+-- Size: 630 305
+-- Offset: 190 -103
 
 
 local ww = LibStub("WidgetWarlock-Alpha1")
@@ -92,7 +102,7 @@ function ControlFreak:CreatePanel()
 
 	local a1, af, a2, dx, dy = "TOPLEFT", checkgroup, "TOPLEFT", 5, -5
 	local checks = {}
-	local creaturetypes = {"Beast", "Demon", "Elemental", "Dragonkin", "Giant", "Humanoid", "Mechanical", "Undead", "Unknown"}
+	local creaturetypes = {L["Beast"], L["Demon"], L["Elemental"], L["Dragonkin"], L["Giant"], L["Humanoid"], L["Mechanical"], L["Undead"], L["Unknown"]}
 	for i,v in ipairs(creaturetypes) do
 		local check = ww:SummonCheckBox(checkgroup, 22, a1, af, a2, dx, dy)
 		checks[v] = check

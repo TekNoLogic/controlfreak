@@ -38,14 +38,7 @@ local maxdebuffs, damageinterval, mydebuffs, isvalid, controlled, colors, defaul
 --      Localization      --
 ----------------------------
 
-local L = {
-	["Click to set focus\n"] = "Click to set focus\n",
-	["Click to cast on focus\n"] = "Click to cast on focus\n",
-	["Click to cast on target\n"] = "Click to cast on target\n",
-	["Click to clear focus\n"] = "Click to clear focus\n",
-	["Shift-click to clear focus\n"] = "Shift-click to clear focus\n",
-	["Type /freak or right-click to open config"] = "Type /freak or right-click to open config",
-}
+local L = CONTROLFREAK_LOCALE
 
 
 -------------------------

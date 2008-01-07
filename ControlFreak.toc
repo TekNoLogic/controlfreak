@@ -20,6 +20,7 @@ Dongle.lua
 OptionHouse.lua
 WidgetWarlock\WidgetWarlock.xml
 
+Locale.lua
 Block.lua
 ControlFreak.lua
 ClassMacrotexts.lua
