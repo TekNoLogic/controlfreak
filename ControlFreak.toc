@@ -26,3 +26,4 @@ ControlFreak.lua
 ClassMacrotexts.lua
 Config.lua
 ConfigDB.lua
+
