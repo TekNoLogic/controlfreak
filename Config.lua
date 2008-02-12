@@ -102,7 +102,7 @@ function ControlFreak:CreatePanel()
 
 	local a1, af, a2, dx, dy = "TOPLEFT", checkgroup, "TOPLEFT", 5, -5
 	local checks = {}
-	local creaturetypes = {L["Beast"], L["Demon"], L["Elemental"], L["Dragonkin"], L["Giant"], L["Humanoid"], L["Mechanical"], L["Undead"], L["Unknown"]}
+	local creaturetypes = {L["Beast"], L["Demon"], L["Elemental"], L["Dragonkin"], L["Giant"], L["Humanoid"], L["Mechanical"], L["Undead"], L["Not specified"], L["Unknown"]}
 	for i,v in ipairs(creaturetypes) do
 		local check = ww:SummonCheckBox(checkgroup, 22, a1, af, a2, dx, dy)
 		checks[v] = check
