@@ -8,7 +8,7 @@ if not ControlFreak then return end
 ----------------------
 
 local ww = LibStub("WidgetWarlock-Alpha1")
-local GAP, EDGEGAP, DROPDOWNOFFSET = 8, 16, 16
+local GAP, EDGEGAP, DROPDOWNOFFSET, NUMROWS, ROWHEIGHT = 8, 16, 16, 13, 18
 
 
 ---------------------
@@ -27,21 +27,18 @@ frame:SetScript("OnShow", function(frame)
 	local currentlabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormal", "Current profile:", "TOPLEFT", subtitle, "BOTTOMLEFT", -2, -GAP)
 	local current = ww:SummonFontString(frame, "OVERLAY", "GameFontHighlight", ControlFreak.db:GetCurrentProfile(), "LEFT", currentlabel, "RIGHT", 10, 0)
 
-	local profiles = ControlFreak.db:GetProfiles()
 
-	local selected = CreateFrame("Frame", "ControlFreakProfileMenu", frame, "UIDropDownMenuTemplate")
-	local loadbutton = ww:SummonButton(frame, "Load", nil, nil, "TOPLEFT", selected, "BOTTOMLEFT", DROPDOWNOFFSET, -GAP/2)
-	local copybutton = ww:SummonButton(frame, "Copy", nil, nil, "LEFT", loadbutton, "RIGHT", GAP, 0)
-	local deletebutton = ww:SummonButton(frame, "Delete", nil, nil, "LEFT", copybutton, "RIGHT", GAP, 0)
+	local createname = ww:SummonEditBox(frame, 255, "TOPLEFT", currentlabel, "BOTTOMLEFT", GAP - 2, -1)
+	local createbutton = ww:SummonButton(frame, "Create", nil, nil, "LEFT", createname, "RIGHT", 5, 0)
+	createbutton:Disable()
+	createname:SetScript("OnTextChanged", function(frame) if frame:GetText() ~= "" then createbutton:Enable() else createbutton:Disable() end end)
 
-	selected:SetPoint("TOPLEFT", currentlabel, "BOTTOMLEFT", -DROPDOWNOFFSET, -GAP)
-	ControlFreakProfileMenuRight:ClearAllPoints()
-	ControlFreakProfileMenuRight:SetPoint("TOP", ControlFreakProfileMenuLeft)
-	ControlFreakProfileMenuRight:SetPoint("RIGHT", frame, -EDGEGAP + DROPDOWNOFFSET, 0)
-	ControlFreakProfileMenuMiddle:SetPoint("RIGHT", ControlFreakProfileMenuRight, "LEFT")
 
+	local deletebutton = ww:SummonButton(frame, "Delete", nil, nil, "BOTTOMRIGHT", -EDGEGAP, EDGEGAP)
+	local copybutton = ww:SummonButton(frame, "Copy", nil, nil, "RIGHT", deletebutton, "LEFT", -GAP, 0)
+	local loadbutton = ww:SummonButton(frame, "Load", nil, nil, "RIGHT", copybutton, "LEFT", -GAP, 0)
 	local function ToggleButtons(value)
-		if value == ControlFreak.db:GetCurrentProfile() then
+		if not value or value == ControlFreak.db:GetCurrentProfile() then
 			loadbutton:Disable()
 			copybutton:Disable()
 			deletebutton:Disable()
@@ -52,53 +49,79 @@ frame:SetScript("OnShow", function(frame)
 		end
 	end
 
-	local function DropdownClick()
-		UIDropDownMenu_SetSelectedValue(ControlFreakProfileMenu, this.value)
-		ToggleButtons(this.value)
-	end
 
-	local ddt = {func = DropdownClick}
-	local function DropdownInit()
-		local current = ControlFreak.db:GetCurrentProfile()
-		for i,v in ipairs(profiles) do
-			ddt.checked = false
-			ddt.text = v
-			ddt.value = v
-			ddt.disabled = v == current
-			UIDropDownMenu_AddButton(ddt)
+	local rows = {}
+	local offset, selectedprofile, proflies = 0
+	local function UpdateRows()
+		for i,row in ipairs(rows) do
+			local profile = profiles[i + offset]
+			if profile then
+				row.text:SetText((profile == ControlFreak.db:GetCurrentProfile() and "|cff999999" or "")..profile)
+				if profile == ControlFreak.db:GetCurrentProfile() then row:Disable() else row:Enable() end
+				row.value = profile
+				row:SetChecked(selectedprofile == profile)
+			else
+				row.text:SetText()
+				row:Disable()
+				row:SetChecked(false)
+			end
 		end
 	end
 
-	local function selectedOnShow(self)
-		UIDropDownMenu_Initialize(self, DropdownInit)
-		UIDropDownMenu_SetSelectedValue(selected, profiles[1])
-		ToggleButtons(profiles[1])
+	local function rowOnClick(self)
+		selectedprofile = selectedprofile ~= self.value and self.value or nil
+		ToggleButtons(selectedprofile)
+		UpdateRows()
 	end
-	selected:SetScript("OnShow", selectedOnShow)
-	selectedOnShow(selected)
+
+	local function OnMouseWheel(f, val)
+		offset = offset - val
+		if (offset + NUMROWS) > #profiles then offset = #profiles - NUMROWS end
+		if offset < 0 then offset = 0 end
+		UpdateRows()
+	end
+
+	for i=1,NUMROWS do
+		local row = CreateFrame("CheckButton", nil, frame)
+		row:SetHeight(ROWHEIGHT)
+		if i == 1 then row:SetPoint("TOP", createname, "BOTTOM", 0, -2) else row:SetPoint("TOP", rows[i-1], "BOTTOM", 0, 0) end
+		row:SetPoint("LEFT", EDGEGAP, 0)
+		row:SetPoint("RIGHT", -EDGEGAP, 0)
+
+		row.text = ww:SummonFontString(row, "OVERLAY", "GameFontWhite", "SAMPLE PROFILE "..i, "LEFT", row, 10, 0)
+		row.text:SetPoint("RIGHT", row, -10, 0)
+		row.text:SetJustifyH("LEFT")
+
+		local highlight = ww:SummonTextureWithCoords(row, nil, nil, nil, "Interface\\HelpFrame\\HelpFrameButton-Highlight", 0, 1, 0, 0.578125)
+		highlight:SetAllPoints()
+		row:SetHighlightTexture(highlight)
+		row:SetCheckedTexture(highlight)
+
+		row:EnableMouseWheel()
+		row:SetScript("OnMouseWheel", OnMouseWheel)
+		row:SetScript("OnClick", rowOnClick)
+		rows[i] = row
+	end
+
 
 	loadbutton:SetScript("OnClick", function()
-		local profile = UIDropDownMenu_GetSelectedValue(selected)
+		local profile = selectedprofile
 		ControlFreak.db:SetProfile(profile)
 		current:SetText(profile)
-		ToggleButtons(profile)
+		ToggleButtons()
+		UpdateRows()
 	end)
 	copybutton:SetScript("OnClick", function()
 		ControlFreak.db:ResetProfile()
-		ControlFreak.db:CopyProfile(UIDropDownMenu_GetSelectedValue(selected))
+		ControlFreak.db:CopyProfile(selectedprofile)
 		profiles = ControlFreak.db:GetProfiles()
 	end)
 	deletebutton:SetScript("OnClick", function()
-		ControlFreak.db:DeleteProfile(UIDropDownMenu_GetSelectedValue(selected))
-		profiles = ControlFreak.db:GetProfiles()
-		UIDropDownMenu_SetSelectedValue(selected, profiles[1])
-		ToggleButtons(profiles[1])
+		ControlFreak.db:DeleteProfile(selectedprofile)
+		profiles, selectedprofile = ControlFreak.db:GetProfiles(), nil
+		ToggleButtons()
+		UpdateRows()
 	end)
-
-	local createname = ww:SummonEditBox(frame, 187, "TOPLEFT", loadbutton, "BOTTOMLEFT", 8, 1)
-	local createbutton = ww:SummonButton(frame, "Create", nil, nil, "LEFT", createname, "RIGHT", 5, -1)
-	createbutton:Disable()
-	createname:SetScript("OnTextChanged", function(frame) if frame:GetText() ~= "" then createbutton:Enable() else createbutton:Disable() end end)
 	createbutton:SetScript("OnClick", function()
 		local profile = createname:GetText()
 		if profile ~= "" then
@@ -110,16 +133,18 @@ frame:SetScript("OnShow", function(frame)
 			createname:SetText("")
 			createname:ClearFocus()
 			createbutton:Disable()
-			ToggleButtons("")
+			UpdateRows()
 		end
 	end)
 
 	ww:EnslaveTooltip(copybutton, "Copy the selected profile into your current profile.")
+	ww:EnslaveTooltip(deletebutton, "Delete the selected profile.  Default profiles will reset to their original settings when deleted.")
 	ww:EnslaveTooltip(createbutton, "Duplicate the current profile into a new profile.")
 
 	local function OnShow(frame)
 		ww.FadeIn(frame, 0.5)
 		profiles = ControlFreak.db:GetProfiles()
+		UpdateRows()
 	end
 	frame:SetScript("OnShow", OnShow)
 	OnShow(frame)
