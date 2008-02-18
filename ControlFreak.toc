@@ -25,5 +25,5 @@ Block.lua
 ControlFreak.lua
 ClassMacrotexts.lua
 Config.lua
-ConfigDB.lua
+ConfigMacro.lua
 
