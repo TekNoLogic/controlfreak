@@ -18,6 +18,9 @@
 
 Dongle.lua
 OptionHouse.lua
+
+tekKonfigHeading.lua
+tekKonfigCheckbox.lua
 WidgetWarlock\WidgetWarlock.xml
 
 Locale.lua
@@ -25,5 +28,6 @@ Block.lua
 ControlFreak.lua
 ClassMacrotexts.lua
 Config.lua
+ConfigDB.lua
 ConfigMacro.lua
 

@@ -15,6 +15,7 @@ CONTROLFREAK_LOCALE = nil
 ----------------------
 
 local ww = LibStub("WidgetWarlock-Alpha1")
+local GAP, EDGEGAP = 8, 16
 
 
 ---------------------
@@ -24,14 +25,15 @@ local ww = LibStub("WidgetWarlock-Alpha1")
 local frame = CreateFrame("Frame")
 frame.parent = "Control Freak"
 frame.name = "Macro"
-ControlFreak.macroconfigframe = frame
 frame:Hide()
 frame:SetScript("OnShow", function(frame)
 	local ControlFreak = ControlFreak
+	local title, subtitle = LibStub("tekKonfig-Heading").new(frame, "Macro", "These controls let you customize the macro, creature types it applies to, and the debuffs to watch.")
 
-	local checkgrouplabel = ww:SummonFontString(frame, "OVERLAY", "GameFontHighlightSmall", "Creature Types", "TOPLEFT", frame, "TOPLEFT", 20, -10)
-	local checkgroup = ww:SummonGroupBox(frame, 305, 102, "TOPLEFT", checkgrouplabel, "BOTTOMLEFT", -15, 0)
-	checkgroup:SetPoint("RIGHT", frame, "RIGHT", -5, 0)
+
+	local checkgrouplabel = ww:SummonFontString(frame, "OVERLAY", "GameFontHighlightSmall", "Creature Types", "TOPLEFT", subtitle, "BOTTOMLEFT", -2 + EDGEGAP, -GAP)
+	local checkgroup = ww:SummonGroupBox(frame, 305, 102, "TOPLEFT", checkgrouplabel, "BOTTOMLEFT", -EDGEGAP, 0)
+	checkgroup:SetPoint("RIGHT", frame, "RIGHT", -EDGEGAP, 0)
 
 
 	local a1, af, a2, dx, dy = "TOPLEFT", checkgroup, "TOPLEFT", 5, -5
@@ -49,9 +51,9 @@ frame:SetScript("OnShow", function(frame)
 	end
 
 
-	local debufflabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormalSmall", "Debuff", "TOPLEFT", checkgroup, "BOTTOMLEFT", 5, -10)
+	local debufflabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormalSmall", "Debuff", "TOPLEFT", checkgroup, "BOTTOMLEFT", 0, -GAP)
 	local debuff = ww:SummonEditBox(frame, 200, "LEFT", debufflabel, "RIGHT", 10, 0)
-	debuff:SetPoint("RIGHT", frame, "RIGHT", -10, 0)
+	debuff:SetPoint("RIGHT", frame, "RIGHT", -EDGEGAP, 0)
 	ww:EnslaveTooltip(debuff, "Debuffs to track for control.  Separate multiple debuffs with commas.")
 	debuff:SetScript("OnEditFocusLost", function()
 		ControlFreak.db.profile.spellname = debuff:GetText()
@@ -60,12 +62,12 @@ frame:SetScript("OnShow", function(frame)
 	debuff:SetScript("OnEscapePressed", debuff.ClearFocus)
 
 
-	local macrolabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormalSmall", "Macro", "LEFT", debufflabel, "LEFT")
-	macrolabel:SetPoint("TOP", debuff, "BOTTOM", 0, -5)
+	local macrolabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormalSmall", "Macro", "TOPLEFT", debufflabel, "BOTTOMLEFT", 0, -GAP)
+--~ 	macrolabel:SetPoint("TOP", debuff, "BOTTOM", 0, -5)
 	local editbox = CreateFrame("EditBox", nil, frame)
 	editbox:SetPoint("TOP", macrolabel, "BOTTOM", 0, -5)
-	editbox:SetPoint("LEFT", 5, 0)
-	editbox:SetPoint("BOTTOMRIGHT", -5, 5)
+	editbox:SetPoint("LEFT", EDGEGAP/3, 0)
+	editbox:SetPoint("BOTTOMRIGHT", -EDGEGAP/3, EDGEGAP/3)
 	editbox:SetFontObject(GameFontHighlight)
 	editbox:SetTextInsets(8,8,8,8)
 	editbox:SetBackdrop(ww.TooltipBorderBG)
