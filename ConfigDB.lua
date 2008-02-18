@@ -21,12 +21,9 @@ frame.parent = "Control Freak"
 frame:Hide()
 frame:SetScript("OnShow", function(frame)
 	local ControlFreak = ControlFreak
-	local title, subtitle = LibStub("tekKonfig-Heading").new(frame, "Macro Profile", "Tese controls let you select a different macro, or create your own.  To reset a default profile you've changed, just delete it!")
+	local title, subtitle = LibStub("tekKonfig-Heading").new(frame, "Macro Profile", "These controls let you select a different macro, or create your own.  To reset a default profile you've changed, just delete it!")
 
 
---~ 	local currentgroup = ww:SummonGroupBox(frame, nil, 105, "TOPLEFT", subtitle, "BOTTOMLEFT", -2, -GAP)
---~ 	currentgroup:SetPoint("LEFT", GAP, 0)
---~ 	currentgroup:SetPoint("RIGHT", -GAP, 0)
 	local currentlabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormal", "Current profile:", "TOPLEFT", subtitle, "BOTTOMLEFT", -2, -GAP)
 	local current = ww:SummonFontString(frame, "OVERLAY", "GameFontHighlight", ControlFreak.db:GetCurrentProfile(), "LEFT", currentlabel, "RIGHT", 10, 0)
 
@@ -41,9 +38,7 @@ frame:SetScript("OnShow", function(frame)
 	ControlFreakProfileMenuRight:ClearAllPoints()
 	ControlFreakProfileMenuRight:SetPoint("TOP", ControlFreakProfileMenuLeft)
 	ControlFreakProfileMenuRight:SetPoint("RIGHT", frame, -EDGEGAP + DROPDOWNOFFSET, 0)
---~ 	ControlFreakProfileMenuMiddle:SetPoint("LEFT", ControlFreakProfileMenuLeft, "RIGHT")
 	ControlFreakProfileMenuMiddle:SetPoint("RIGHT", ControlFreakProfileMenuRight, "LEFT")
---~ 	ControlFreakProfileMenuMiddle:SetWidth(250)
 
 	local function ToggleButtons(value)
 		if value == ControlFreak.db:GetCurrentProfile() then
