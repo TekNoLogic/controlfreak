@@ -52,8 +52,9 @@ frame:SetScript("OnShow", function(frame)
 
 	local rows = {}
 	local offset, selectedprofile, proflies = 0
+	local function sort(a,b) return string.lower(a) < string.lower(b) end
 	local function UpdateRows()
-		table.sort(profiles)
+		table.sort(profiles, sort)
 		for i,row in ipairs(rows) do
 			local profile = profiles[i + offset]
 			if profile then
