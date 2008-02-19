@@ -28,7 +28,7 @@ frame.name = "Macro"
 frame:Hide()
 frame:SetScript("OnShow", function(frame)
 	local ControlFreak = ControlFreak
-	local title, subtitle = LibStub("tekKonfig-Heading").new(frame, "Macro", "These controls let you customize the macro, creature types it applies to, and the debuffs to watch.")
+	local title, subtitle = LibStub("tekKonfig-Heading").new(frame, "Control Freak - Macro", "These controls let you customize the macro, creature types it applies to, and the debuffs to watch.")
 
 
 	local checkgrouplabel = ww:SummonFontString(frame, "OVERLAY", "GameFontHighlightSmall", "Creature Types", "TOPLEFT", subtitle, "BOTTOMLEFT", -2 + EDGEGAP, -GAP)
@@ -63,7 +63,6 @@ frame:SetScript("OnShow", function(frame)
 
 
 	local macrolabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormalSmall", "Macro", "TOPLEFT", debufflabel, "BOTTOMLEFT", 0, -GAP)
---~ 	macrolabel:SetPoint("TOP", debuff, "BOTTOM", 0, -5)
 	local editbox = CreateFrame("EditBox", nil, frame)
 	editbox:SetPoint("TOP", macrolabel, "BOTTOM", 0, -5)
 	editbox:SetPoint("LEFT", EDGEGAP/3, 0)

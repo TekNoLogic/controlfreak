@@ -7,8 +7,8 @@ if not ControlFreak then return end
 --      Locals      --
 ----------------------
 
-local ww = LibStub("WidgetWarlock-Alpha1")
 local tekcheck = LibStub("tekKonfig-Checkbox")
+local tekslider = LibStub("tekKonfig-Slider")
 local GAP = 8
 
 
@@ -37,9 +37,9 @@ frame:SetScript("OnShow", function(frame)
 	showtip:SetChecked(ControlFreak.db.char.showtooltip)
 
 
-	local threshslider, threshslidertext, threashsliderlow = ww:SummonSlider(frame, "Break Threshold: "..ControlFreak.db.char.breakthreshold.." sec", 0, 10, "LEFT", frame, "TOP", GAP, 0)
-	threshslider:SetPoint("TOP", lockpos, "TOP", 0, -15)
-	ww:EnslaveTooltip(threshslider, "Time (in seconds) before spell breaks to unfade frame.")
+	local threshslider, threshslidertext, threshcontainer = tekslider.new(frame, "Break Threshold: "..ControlFreak.db.char.breakthreshold.." sec", 0, 10, "LEFT", frame, "TOP", GAP, 0)
+	threshcontainer:SetPoint("TOP", lockpos, "TOP", 0, 0)
+	threshslider.tiptext = "Time (in seconds) before spell breaks to unfade frame."
 	threshslider:SetValue(ControlFreak.db.char.breakthreshold)
 	threshslider:SetValueStep(1)
 	threshslider:SetScript("OnValueChanged", function()
@@ -49,9 +49,9 @@ frame:SetScript("OnShow", function(frame)
 
 
 	local alpha = math.floor(ControlFreak.db.char.alpha*100 + .5)
-	local alphaslider, alphaslidertext, alphasliderlow = ww:SummonSlider(frame, "Alpha: "..alpha.."%", "0%", "100%", "TOP", threashsliderlow, "BOTTOM", 0, -GAP-10)
-	alphaslider:SetPoint("LEFT", threshslider, "LEFT")
-	ww:EnslaveTooltip(alphaslider, "Alpha level to fade frame to when focus is controlled, dead, or not set.")
+	local alphaslider, alphaslidertext = tekslider.new(frame, "Alpha: "..alpha.."%", "0%", "100%", "TOP", threshcontainer, "BOTTOM", 0, -GAP)
+--~ 	alphaslider:SetPoint("LEFT", threshslider, "LEFT")
+	alphaslider.tiptext = "Alpha level to fade frame to when focus is controlled, dead, or not set."
 	alphaslider:SetValue(ControlFreak.db.char.alpha)
 	alphaslider:SetValueStep(0.05)
 	alphaslider:SetScript("OnValueChanged", function()
@@ -62,9 +62,8 @@ frame:SetScript("OnShow", function(frame)
 	end)
 
 
-	local function OnShow(frame) ww.FadeIn(frame, 0.5) end
-	frame:SetScript("OnShow", OnShow)
-	OnShow(frame)
+	frame:SetScript("OnShow", LibStub("tekKonfig-FadeIn").FadeIn)
+	LibStub("tekKonfig-FadeIn").FadeIn(frame)
 end)
 
 InterfaceOptions_AddCategory(frame)

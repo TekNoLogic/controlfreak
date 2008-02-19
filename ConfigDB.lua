@@ -21,7 +21,7 @@ frame.parent = "Control Freak"
 frame:Hide()
 frame:SetScript("OnShow", function(frame)
 	local ControlFreak = ControlFreak
-	local title, subtitle = LibStub("tekKonfig-Heading").new(frame, "Macro Profile", "These controls let you select a different macro, or create your own.  To reset a default profile you've changed, just delete it!")
+	local title, subtitle = LibStub("tekKonfig-Heading").new(frame, "Control Freak - Macro Profile", "These controls let you select a different macro, or create your own.  To reset a default profile you've changed, just delete it!")
 
 
 	local currentlabel = ww:SummonFontString(frame, "OVERLAY", "GameFontNormal", "Current profile:", "TOPLEFT", subtitle, "BOTTOMLEFT", -2, -GAP)
@@ -53,6 +53,7 @@ frame:SetScript("OnShow", function(frame)
 	local rows = {}
 	local offset, selectedprofile, proflies = 0
 	local function UpdateRows()
+		table.sort(profiles)
 		for i,row in ipairs(rows) do
 			local profile = profiles[i + offset]
 			if profile then
@@ -108,6 +109,7 @@ frame:SetScript("OnShow", function(frame)
 		local profile = selectedprofile
 		ControlFreak.db:SetProfile(profile)
 		current:SetText(profile)
+		selectedprofile = nil
 		ToggleButtons()
 		UpdateRows()
 	end)
@@ -141,8 +143,9 @@ frame:SetScript("OnShow", function(frame)
 	ww:EnslaveTooltip(deletebutton, "Delete the selected profile.  Default profiles will reset to their original settings when deleted.")
 	ww:EnslaveTooltip(createbutton, "Duplicate the current profile into a new profile.")
 
+	local fade = LibStub("tekKonfig-FadeIn").FadeIn
 	local function OnShow(frame)
-		ww.FadeIn(frame, 0.5)
+		fade(frame)
 		profiles = ControlFreak.db:GetProfiles()
 		UpdateRows()
 	end

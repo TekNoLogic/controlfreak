@@ -21,6 +21,9 @@ OptionHouse.lua
 
 tekKonfigHeading.lua
 tekKonfigCheckbox.lua
+tekKonfigSlider.lua
+tekKonfigFadeIn.lua
+
 WidgetWarlock\WidgetWarlock.xml
 
 Locale.lua
