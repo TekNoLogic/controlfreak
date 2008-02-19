@@ -72,9 +72,6 @@ function ControlFreak:Initialize()
 	local _, title = GetAddOnInfo("ControlFreak")
 	local author, version = GetAddOnMetadata("ControlFreak", "Author"), GetAddOnMetadata("ControlFreak", "Version")
 
-	local slasher = self:InitializeSlashCommand("Control Freak config", "CONTROLFREAK", "freak")
-	slasher:RegisterSlashHandler("Open config", "^$", function() self:Print("Slash command does nothing for now, access config via the Interface menu") end)
-
 	-- Frame for OnUpdates
 	updateframe = CreateFrame("Frame")
 	updateframe:SetScript("OnUpdate", self.OnUpdate)

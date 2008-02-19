@@ -67,3 +67,11 @@ frame:SetScript("OnShow", function(frame)
 end)
 
 InterfaceOptions_AddCategory(frame)
+
+
+-----------------------------
+--      Slash command      --
+-----------------------------
+
+SLASH_CONTROLFREAK1 = "/freak"
+SlashCmdList.CONTROLFREAK = function() InterfaceOptionsFrame_OpenToFrame(frame) end
