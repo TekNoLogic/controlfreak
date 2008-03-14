@@ -19,10 +19,7 @@
 Dongle.lua
 OptionHouse.lua
 
-tekKonfigHeading.lua
-tekKonfigCheckbox.lua
-tekKonfigSlider.lua
-tekKonfigFadeIn.lua
+tekKonfig\tekKonfig.xml
 
 WidgetWarlock\WidgetWarlock.xml
 
