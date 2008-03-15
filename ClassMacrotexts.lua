@@ -39,7 +39,7 @@ function ControlFreak:LoadDefaultMacros()
 /stopmacro [button:1/3/4/5] [combat]
 /freak
 ]]
-		self.db.profile.spellname = "Polymorph, Polymorph: Pig, Polymorph: Turtle"
+		self.db.profile.spellname = "Polymorph"
 		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
@@ -49,15 +49,15 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
-/castrandom [target=focus,exists,nodead,harm] Polymorph, Polymorph: Pig
+/castrandom [target=focus,exists,nodead,harm] Polymorph, Polymorph(Rank 1: Pig)
 /stopmacro [target=focus,exists,nodead,harm]
-/castrandom [combat,harm,exists,nodead] Polymorph, Polymorph: Pig
+/castrandom [combat,harm,exists,nodead] Polymorph, Polymorph(Rank 1: Pig)
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
 /stopmacro [button:1/3/4/5] [combat]
 /freak
 ]]
-		self.db.profile.spellname = "Polymorph, Polymorph: Pig, Polymorph: Turtle"
+		self.db.profile.spellname = "Polymorph"
 		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
@@ -67,15 +67,15 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.macrotext = [[
 /clearfocus [modifier:shift]
 /stopmacro [modifier:shift]
-/castrandom [target=focus,exists,nodead,harm] Polymorph, Polymorph: Pig, Polymorph: Turtle
+/castrandom [target=focus,exists,nodead,harm] Polymorph, Polymorph(Rank 1: Pig), Polymorph(Rank 1: Turtle)
 /stopmacro [target=focus,exists,nodead,harm]
-/castrandom [combat,harm,exists,nodead] Polymorph, Polymorph: Pig, Polymorph: Turtle
+/castrandom [combat,harm,exists,nodead] Polymorph, Polymorph(Rank 1: Pig), Polymorph(Rank 1: Turtle)
 /focus [exists,harm,nodead] target
 /clearfocus [target=focus,dead]
 /stopmacro [button:1/3/4/5] [combat]
 /freak
 ]]
-		self.db.profile.spellname = "Polymorph, Polymorph: Pig, Polymorph: Turtle"
+		self.db.profile.spellname = "Polymorph"
 		self.db.profile.targtypes = {Beast = true, Humanoid = true}
 	end
 
