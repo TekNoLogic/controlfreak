@@ -4,7 +4,7 @@
 ## Notes: Crowd control assistance
 ## Author: Tekkub Stoutwrithe
 ## Version: Alpha
-## X-Website: http://code.google.com/p/tekkub-wow/
+## X-Website: http://www.tekkub.net/
 ## X-Email: tekkub-wow@googlegroups.com
 ## X-Category: Combat
 
