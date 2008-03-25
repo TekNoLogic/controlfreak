@@ -45,7 +45,6 @@ local L = CONTROLFREAK_LOCALE
 --      Namespace      --
 -------------------------
 
-local OptionHouse = LibStub("OptionHouse-1.1")
 ControlFreak = DongleStub("Dongle-1.0"):New("ControlFreak")
 if tekDebug then ControlFreak:EnableDebug(1, tekDebug:GetFrame("ControlFreak")) end
 
@@ -72,12 +71,6 @@ function ControlFreak:Initialize()
 
 	local _, title = GetAddOnInfo("ControlFreak")
 	local author, version = GetAddOnMetadata("ControlFreak", "Author"), GetAddOnMetadata("ControlFreak", "Version")
-	local oh = OptionHouse:RegisterAddOn("Control Freak", title, author, version)
-	oh:RegisterCategory("Options", ControlFreak, "CreatePanel")
-	oh:RegisterCategory("Profiles", ControlFreak, "CreateProfilePanel")
-
-	local slasher = self:InitializeSlashCommand("Control Freak config", "CONTROLFREAK", "freak")
-	slasher:RegisterSlashHandler("Open config", "^$", function() OptionHouse:Open("Control Freak", "Options") end)
 
 	-- Frame for OnUpdates
 	updateframe = CreateFrame("Frame")

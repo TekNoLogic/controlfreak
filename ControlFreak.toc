@@ -4,7 +4,7 @@
 ## Notes: Crowd control assistance
 ## Author: Tekkub Stoutwrithe
 ## Version: Alpha
-## X-Website: http://code.google.com/p/tekkub-wow/
+## X-Website: http://www.tekkub.net/
 ## X-Email: tekkub-wow@googlegroups.com
 ## X-Category: Combat
 
@@ -18,6 +18,9 @@
 
 Dongle.lua
 OptionHouse.lua
+
+tekKonfig\tekKonfig.xml
+
 WidgetWarlock\WidgetWarlock.xml
 
 Locale.lua
@@ -26,4 +29,5 @@ ControlFreak.lua
 ClassMacrotexts.lua
 Config.lua
 ConfigDB.lua
+ConfigMacro.lua
 

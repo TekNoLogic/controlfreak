@@ -153,6 +153,24 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.targtypes = {Undead = true}
 	end
 
+	-- Paladin - Turn Evil --
+	self.db:SetProfile("Paladin - Turn Evil")
+	if self.db.profile.macrotext == "/freak" then
+		self.db.profile.macrotext = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/cast [target=focus,exists,nodead,harm] Turn Evil
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [combat,harm,exists,nodead] Turn Evil
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
+]]
+		self.db.profile.spellname = "Turn Undead"
+		self.db.profile.targtypes = {Undead = true, Demon = true}
+	end
+
 	-- Hunter - Freezing Trap --
 	self.db:SetProfile("Hunter - Freezing Trap")
 	if self.db.profile.macrotext == "/freak" then
