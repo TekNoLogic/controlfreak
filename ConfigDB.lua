@@ -144,9 +144,7 @@ frame:SetScript("OnShow", function(frame)
 	ww:EnslaveTooltip(deletebutton, "Delete the selected profile.  Default profiles will reset to their original settings when deleted.")
 	ww:EnslaveTooltip(createbutton, "Duplicate the current profile into a new profile.")
 
-	local fade = LibStub("tekKonfig-FadeIn").FadeIn
 	local function OnShow(frame)
-		fade(frame)
 		profiles = ControlFreak.db:GetProfiles()
 		UpdateRows()
 	end
