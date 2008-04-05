@@ -255,7 +255,7 @@ function ControlFreak:OnUpdate(elapsed)
 	if unit then
 		if not isvalid[unit] then color, note, tiptext = "grey", "Invalid"
 		else
-			if mydebuffs[1] and IsSpellInRange(mydebuffs[1], unit) == 0 then range = "*" end
+			for debuff in pairs(mydebuffs) do if IsSpellInRange(debuff, unit) == 0 then range = "*" end end
 			if controlled[unit] then
 				local _, _, _, _, _, _, timeLeft = UnitDebuff(unit, controlled[unit])
 				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft) or "Controlled"
