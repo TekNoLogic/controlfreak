@@ -10,14 +10,13 @@
 
 ## SavedVariables: ControlFreakDB
 
-## OptionalDeps: Dongle, OptionHouse
+## OptionalDeps: Dongle
 
 ## LoadManagers: AddonLoader
 ## X-LoadOn-NotResting: true
 ## X-LoadOn-Slash: /freak
 
 Dongle.lua
-OptionHouse.lua
 
 tekKonfig\tekKonfig.xml
 
