@@ -37,7 +37,7 @@ frame:SetScript("OnShow", function(frame)
 	showtip:SetChecked(ControlFreak.db.char.showtooltip)
 
 
-	local threshslider, threshslidertext, threshcontainer = tekslider.new(frame, "Break Threshold: "..ControlFreak.db.char.breakthreshold.." sec", 0, 10, "LEFT", frame, "TOP", GAP, 0)
+	local threshslider, threshslidertext, threshcontainer = tekslider.new(frame, "Break Threshold: "..ControlFreak.db.char.breakthreshold.." sec", 0, 50, "LEFT", frame, "TOP", GAP, 0)
 	threshcontainer:SetPoint("TOP", lockpos, "TOP", 0, 0)
 	threshslider.tiptext = "Time (in seconds) before spell breaks to unfade frame."
 	threshslider:SetValue(ControlFreak.db.char.breakthreshold)
