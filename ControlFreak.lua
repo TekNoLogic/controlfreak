@@ -59,7 +59,7 @@ function ControlFreak:Initialize()
 			breakthreshold = 5,
 			alpha = 0.5,
 			showtooltip = true,
-			frameopts = {locked = false}
+			frameopts = {locked = false, scale = 1}
 		},
 		profile = {
 			spellname = "",

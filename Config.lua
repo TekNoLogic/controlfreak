@@ -49,8 +49,7 @@ frame:SetScript("OnShow", function(frame)
 
 
 	local alpha = math.floor(ControlFreak.db.char.alpha*100 + .5)
-	local alphaslider, alphaslidertext = tekslider.new(frame, "Alpha: "..alpha.."%", "0%", "100%", "TOP", threshcontainer, "BOTTOM", 0, -GAP)
---~ 	alphaslider:SetPoint("LEFT", threshslider, "LEFT")
+	local alphaslider, alphaslidertext, alphacontainer = tekslider.new(frame, "Alpha: "..alpha.."%", "0%", "100%", "TOP", threshcontainer, "BOTTOM", 0, -GAP)
 	alphaslider.tiptext = "Alpha level to fade frame to when focus is controlled, dead, or not set."
 	alphaslider:SetValue(ControlFreak.db.char.alpha)
 	alphaslider:SetValueStep(0.05)
@@ -59,6 +58,21 @@ frame:SetScript("OnShow", function(frame)
 		local alpha = math.floor(ControlFreak.db.char.alpha*100 + .5)
 		alphaslidertext:SetText("Alpha: "..alpha.."%")
 		ControlFreak:OnUpdate(true)
+	end)
+
+
+	local scale = math.floor(ControlFreak.db.char.frameopts.scale*100 + .5)
+	local scaleslider, scaleslidertext = tekslider.new(frame, "Scale: "..scale.."%", "50%", "200%", "TOP", alphacontainer, "BOTTOM", 0, -GAP)
+	scaleslider.tiptext = "Frame scale."
+	scaleslider:SetValue(ControlFreak.db.char.frameopts.scale)
+	scaleslider:SetValueStep(0.05)
+	scaleslider:SetScript("OnValueChanged", function()
+		local block, db = ControlFreakFrame, ControlFreak.db.char.frameopts
+		local oldscale, oldx, oldy = block:GetScale(), block:GetCenter()
+		db.scale = scaleslider:GetValue()
+		db.x, db.y = oldx * oldscale / db.scale, oldy * oldscale / db.scale
+		block:Position()
+		scaleslidertext:SetText("Scale: "..math.floor(db.scale*100 + .5).."%")
 	end)
 
 

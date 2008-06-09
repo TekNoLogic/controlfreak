@@ -43,7 +43,13 @@ end)
 
 function frame:SetDB(newdb)
 	db = newdb
+	self:Position()
+end
+
+
+function frame:Position()
 	frame:ClearAllPoints()
+	frame:SetScale(db.scale)
 	frame:SetPoint("CENTER", UIParent, db.x and "BOTTOMLEFT" or "CENTER", db.x or 0, db.y or -100)
 end
 
