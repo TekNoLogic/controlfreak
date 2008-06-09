@@ -37,6 +37,18 @@ frame:SetScript("OnShow", function(frame)
 	showtip:SetChecked(ControlFreak.db.char.showtooltip)
 
 
+	local compactmode = tekcheck.new(frame, nil, "Compact mode", "TOPLEFT", showtip, "BOTTOMLEFT", 0, -GAP)
+	compactmode.tiptext = "Use compact feedback frame"
+	compactmode:SetScript("OnClick", function(self)
+		checksound(self)
+		ControlFreak.db.char.compactmode = not ControlFreak.db.char.compactmode
+		ControlFreakFrame:SetText(ControlFreak.db.char.compactmode and "000s" or "Controlled (000s)")
+		ControlFreakFrame:Resize()
+		ControlFreak:OnUpdate(true)
+	end)
+	compactmode:SetChecked(ControlFreak.db.char.compactmode)
+
+
 	local threshslider, threshslidertext, threshcontainer = tekslider.new(frame, "Break Threshold: "..ControlFreak.db.char.breakthreshold.." sec", 0, 50, "LEFT", frame, "TOP", GAP, 0)
 	threshcontainer:SetPoint("TOP", lockpos, "TOP", 0, 0)
 	threshslider.tiptext = "Time (in seconds) before spell breaks to unfade frame."

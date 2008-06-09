@@ -92,7 +92,7 @@ function ControlFreak:Enable()
 	self:RegisterMessage("DONGLE_PROFILE_DELETED", "ProfileDeleted")
 
 	lego = ControlFreakFrame
-	lego:SetText("Controlled (000s)")
+	lego:SetText(self.db.char.compactmode and "000s" or "Controlled (000s)")
 	lego:Resize()
 	lego:SetDB(self.db.char.frameopts)
 
@@ -235,6 +235,7 @@ function ControlFreak:StopTimer()
 end
 
 
+local shortnotes = {["Control Freak"] = "CF", Invalid = "Inv", Controlled = "Ctr", Damage = "Dmg", Loose = "L", Ready = "Rdy", Dead = "D"}
 function ControlFreak:OnUpdate(elapsed)
 	local self = ControlFreak
 	self.elapsed = self.elapsed or 0
@@ -250,14 +251,14 @@ function ControlFreak:OnUpdate(elapsed)
 	if hp and hp ~= lasthp then lasthp, lasthptime = hp, GetTime() end
 
 	local alpha, color, note, range, unittag = self.db.char.alpha, "default", "Control Freak", "", ""
-	local unit
+	local unit, timeLeft
 	if focusisenemy and not focusdead then unit = "focus" end
 	if unit then
 		if not isvalid[unit] then color, note, tiptext = "grey", "Invalid"
 		else
 			for debuff in pairs(mydebuffs) do if IsSpellInRange(debuff, unit) == 0 then range = "*" end end
 			if controlled[unit] then
-				local _, _, _, _, _, _, timeLeft = UnitDebuff(unit, controlled[unit])
+				timeLeft = select(7, UnitDebuff(unit, controlled[unit]))
 				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft) or "Controlled"
 				if timeLeft and timeLeft <= self.db.char.breakthreshold then alpha = 1.0 end
 			elseif lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
@@ -283,6 +284,7 @@ function ControlFreak:OnUpdate(elapsed)
 
 	lego:SetAlpha(alpha)
 	lego:SetBackdropBorderColor(unpack(colors[color]))
+	if self.db.char.compactmode then note = timeLeft and string.format("%ds", timeLeft) or shortnotes[note] end
 	lego:SetText(string.concat(colors[color].t, range, note, range))
 
 	if focusdead and not wasfocusdead then self:PLAYER_FOCUS_CHANGED() end
