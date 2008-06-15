@@ -1,3 +1,7 @@
+2.4.2.6-Beta
+    Add "compact" mode
+    Add option to scale frame
+
 2.4.2.5-Beta
     Increase Break Threshold limit to 50 sec
 
