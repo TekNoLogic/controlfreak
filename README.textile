@@ -1,0 +1,15 @@
+ControlFreak is a small crowd control assist addon.
+It provides a small frame for fast click-casting of CC spells onto the player's focus target.
+It also provides visual cues of the focus's status and audio cues of CC breaks.
+
+ControlFreak is designed to be an "install and go" addon for all classes with sustainable CC spells,
+but it also provides direct access to edit the macro used by the frame for players that want to extend it's functionality.
+
+For users who want a macro instead of clicking on the frame, put this code into a new macro and drop it in your actionbar:<br>
+@/click ControlFreakFrame@
+
+h2. Links
+
+<b>Visit "my site":http://www.tekkub.net/addons/ControlFreak for more info.<br>
+Please report all bugs and feature requests to my "Google Code":http://code.google.com/p/tekkub-wow/issues/list?can=1&q=addon:ControlFreak&sort=status+milestone&colspec=ID%20Type%20Status%20Addon%20Milestone%20Summary tracker<br>
+Please direct all feedback and questions to my "Google Groups":http://groups-beta.google.com/group/tekkub-wow mailinglist</b>

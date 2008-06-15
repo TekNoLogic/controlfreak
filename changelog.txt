@@ -1,0 +1,27 @@
+2.4.2.5-Beta
+    Increase Break Threshold limit to 50 sec
+
+2.4.1.4-Beta
+    Actually remove OptionHouse, since I don't use it here anymore
+
+2.4.1.3-Beta
+    Fix range indicator
+
+2.4.0.2-Beta
+    Remove fade in from config panels
+    Add "About" panel and TOC metadata
+    Upgrade tekKonfig
+    Fix random poly macros, the spell names changed
+    Added profile for new pally spell "Turn Evil"
+    Slash command works again, huzzah!
+    Make profile sort case-insensative
+    More GUI work, slowly replacing WidgetWarlock
+    Reworking DB Profile config frame
+    More config panel work.
+     - Now consistant with Blizzy's layouts.
+     - DB panel still needs some work though.
+    Moved config frames to new Blizzy GUI, basic stuff now, more to come
+
+2.3.3.1-Beta
+    Add "Not specified" to creature types
+
