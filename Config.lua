@@ -103,3 +103,14 @@ LibStub("tekKonfig-AboutPanel").new("Control Freak", "ControlFreak")
 
 SLASH_CONTROLFREAK1 = "/freak"
 SlashCmdList.CONTROLFREAK = function() InterfaceOptionsFrame_OpenToFrame(frame) end
+
+
+----------------------------------------
+--      Quicklaunch registration      --
+----------------------------------------
+
+LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("ControlFreak", {
+	launcher = true,
+	icon = "Interface\\AddOns\\ControlFreak\\icon",
+	OnClick = function() InterfaceOptionsFrame_OpenToFrame(frame) end,
+})
