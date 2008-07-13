@@ -1,3 +1,6 @@
+2.4.2.7-Beta
+    Add LDB quicklaunch button
+
 2.4.2.6-Beta
     Add "compact" mode
     Add option to scale frame
