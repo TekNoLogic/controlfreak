@@ -110,7 +110,7 @@ SlashCmdList.CONTROLFREAK = function() InterfaceOptionsFrame_OpenToFrame(frame) 
 ----------------------------------------
 
 LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("ControlFreak", {
-	launcher = true,
+	type = "launcher",
 	icon = "Interface\\AddOns\\ControlFreak\\icon",
 	OnClick = function() InterfaceOptionsFrame_OpenToFrame(frame) end,
 })
