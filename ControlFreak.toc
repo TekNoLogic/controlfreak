@@ -15,6 +15,7 @@
 ## LoadManagers: AddonLoader
 ## X-LoadOn-NotResting: true
 ## X-LoadOn-Slash: /freak
+## X-LoadOn-LDB-Launcher: Interface\AddOns\ControlFreak\icon
 
 Dongle.lua
 

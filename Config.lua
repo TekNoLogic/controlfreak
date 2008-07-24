@@ -109,8 +109,9 @@ SlashCmdList.CONTROLFREAK = function() InterfaceOptionsFrame_OpenToFrame(frame) 
 --      Quicklaunch registration      --
 ----------------------------------------
 
-LibStub:GetLibrary("LibDataBroker-1.1"):NewDataObject("ControlFreak", {
+local ldb = LibStub:GetLibrary("LibDataBroker-1.1")
+local launcher = ldb:GetDataObjectByName("ControlFreak") or ldb:NewDataObject("ControlFreak", {
 	type = "launcher",
 	icon = "Interface\\AddOns\\ControlFreak\\icon",
-	OnClick = function() InterfaceOptionsFrame_OpenToFrame(frame) end,
 })
+function launcher.OnClick() InterfaceOptionsFrame_OpenToFrame(frame) end
