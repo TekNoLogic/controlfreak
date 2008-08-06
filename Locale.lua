@@ -34,6 +34,23 @@ if loc == "deDE" then localized = {
 } end
 
 
+----------------------
+--      French      --
+----------------------
+
+if loc == "frFR" then localized = {
+	Beast = "B\195\170te",
+	Critter = "Bestiole",
+	Demon = "D\195\169mon",
+	Dragonkin = "Draconien",
+	Elemental = "El\195\169mentaire",
+	Giant = "G\195\169ant",
+	Humanoid = "Humano\195\175de",
+	Mechanical = "M\195\169canique",
+	Undead = "Mort-vivant",
+} end
+
+
 -- Metatable majicks... makes localized table fallback to engrish, or fallback to the index requested.
 -- This ensures we ALWAYS get a value back, even if it's the index we requested originally
 CONTROLFREAK_LOCALE = localized and setmetatable(localized, {__index = function(t,i) return engrish[i] or i end})
