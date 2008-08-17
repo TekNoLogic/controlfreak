@@ -8,6 +8,7 @@ if not ControlFreak then return end
 ----------------------
 
 local ww = LibStub("WidgetWarlock-Alpha1")
+local butt = LibStub("tekKonfig-Button")
 local GAP, EDGEGAP, DROPDOWNOFFSET, NUMROWS, ROWHEIGHT = 8, 16, 16, 13, 18
 
 
@@ -29,14 +30,21 @@ frame:SetScript("OnShow", function(frame)
 
 
 	local createname = ww:SummonEditBox(frame, 255, "TOPLEFT", currentlabel, "BOTTOMLEFT", GAP - 2, -1)
-	local createbutton = ww:SummonButton(frame, "Create", nil, nil, "LEFT", createname, "RIGHT", 5, 0)
+	local createbutton = butt.new(frame, "LEFT", createname, "RIGHT", 5, 0)
+	createbutton:SetText("Create")
 	createbutton:Disable()
 	createname:SetScript("OnTextChanged", function(frame) if frame:GetText() ~= "" then createbutton:Enable() else createbutton:Disable() end end)
 
 
-	local deletebutton = ww:SummonButton(frame, "Delete", nil, nil, "BOTTOMRIGHT", -EDGEGAP, EDGEGAP)
-	local copybutton = ww:SummonButton(frame, "Copy", nil, nil, "RIGHT", deletebutton, "LEFT", -GAP, 0)
-	local loadbutton = ww:SummonButton(frame, "Load", nil, nil, "RIGHT", copybutton, "LEFT", -GAP, 0)
+	local deletebutton = butt.new(frame, "BOTTOMRIGHT", -EDGEGAP, EDGEGAP)
+	deletebutton:SetText("Delete")
+
+	local copybutton = butt.new(frame, "RIGHT", deletebutton, "LEFT", -GAP, 0)
+	copybutton:SetText("Copy")
+
+	local loadbutton = butt.new(frame, "RIGHT", copybutton, "LEFT", -GAP, 0)
+	loadbutton:SetText("Load")
+
 	local function ToggleButtons(value)
 		if not value or value == ControlFreak.db:GetCurrentProfile() then
 			loadbutton:Disable()
