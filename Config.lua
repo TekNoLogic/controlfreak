@@ -94,9 +94,6 @@ end)
 InterfaceOptions_AddCategory(frame)
 
 
-LibStub("tekKonfig-AboutPanel").new("Control Freak", "ControlFreak")
-
-
 -----------------------------
 --      Slash command      --
 -----------------------------

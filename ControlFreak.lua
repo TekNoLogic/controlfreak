@@ -69,8 +69,7 @@ function ControlFreak:Initialize()
 	}, defaultprofiles[UnitClass("player")])
 	self:LoadDefaultMacros()
 
-	local _, title = GetAddOnInfo("ControlFreak")
-	local author, version = GetAddOnMetadata("ControlFreak", "Author"), GetAddOnMetadata("ControlFreak", "Version")
+	LibStub("tekKonfig-AboutPanel").new("Control Freak", "ControlFreak")
 
 	-- Frame for OnUpdates
 	updateframe = CreateFrame("Frame")
