@@ -1,3 +1,9 @@
+3.0.1.10-Beta
+    Rearrange config panel order
+    Fix config issues in Wrath
+    Embed update for Wrath
+    frFR locale
+
 2.4.3.9-Beta
     Add AddonLoad LDB launcher field
     Tweak launcher declaration to match the updated spec
