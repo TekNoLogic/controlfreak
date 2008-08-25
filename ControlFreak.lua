@@ -259,7 +259,8 @@ function ControlFreak:OnUpdate(elapsed)
 		else
 			for debuff in pairs(mydebuffs) do if IsSpellInRange(debuff, unit) == 0 then range = "*" end end
 			if controlled[unit] then
-				timeLeft = select(7, UnitDebuff(unit, controlled[unit])) - (IS_WRATH_BUILD and GetTime() or 0)
+				timeLeft = select(7, UnitDebuff(unit, controlled[unit]))
+				if timeLeft and IS_WRATH_BUILD then timeLeft = timeLeft - GetTime() end
 				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft) or "Controlled"
 				if timeLeft and timeLeft <= self.db.char.breakthreshold then alpha = 1.0 end
 			elseif lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
