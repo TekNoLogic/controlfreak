@@ -1,3 +1,7 @@
+3.0.1.11-Beta
+    Fix for changes to UnitDebuff in Wrath
+    Embed update
+
 3.0.1.10-Beta
     Rearrange config panel order
     Fix config issues in Wrath
