@@ -22,7 +22,7 @@ local GAP, EDGEGAP = 8, 16
 --      Panel      --
 ---------------------
 
-local frame = CreateFrame("Frame")
+local frame = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 frame.parent = "Control Freak"
 frame.name = "Macro"
 frame:Hide()

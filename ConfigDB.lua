@@ -16,7 +16,7 @@ local GAP, EDGEGAP, DROPDOWNOFFSET, NUMROWS, ROWHEIGHT = 8, 16, 16, 13, 18
 --      Panel      --
 ---------------------
 
-local frame = CreateFrame("Frame", nil, UIParent)
+local frame = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 frame.name = "Macro Profile"
 frame.parent = "Control Freak"
 frame:Hide()

@@ -1,4 +1,5 @@
-﻿
+﻿if not IS_WRATH_BUILD then InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToFrame end
+
 
 if not ControlFreak then return end
 
@@ -16,7 +17,7 @@ local GAP = 8
 --      Panel      --
 ---------------------
 
-local frame = CreateFrame("Frame", nil, UIParent)
+local frame = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 frame.name = "Control Freak"
 frame:Hide()
 frame:SetScript("OnShow", function(frame)
@@ -99,7 +100,7 @@ InterfaceOptions_AddCategory(frame)
 -----------------------------
 
 SLASH_CONTROLFREAK1 = "/freak"
-SlashCmdList.CONTROLFREAK = function() InterfaceOptionsFrame_OpenToFrame(frame) end
+SlashCmdList.CONTROLFREAK = function() InterfaceOptionsFrame_OpenToCategory(frame) end
 
 
 ----------------------------------------
@@ -111,4 +112,4 @@ local launcher = ldb:GetDataObjectByName("ControlFreak") or ldb:NewDataObject("C
 	type = "launcher",
 	icon = "Interface\\AddOns\\ControlFreak\\icon",
 })
-function launcher.OnClick() InterfaceOptionsFrame_OpenToFrame(frame) end
+function launcher.OnClick() InterfaceOptionsFrame_OpenToCategory(frame) end
