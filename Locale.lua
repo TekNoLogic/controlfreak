@@ -23,7 +23,7 @@ local engrish = {}
 
 if loc == "deDE" then localized = {
 	Beast = "Wildtier",
-	Demon = "Dämon",
+	Demon = "D\195\164mon",
 	Elemental = "Elementar",
 	Dragonkin = "Drachkin",
 	Giant = "Riese",
