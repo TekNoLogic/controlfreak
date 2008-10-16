@@ -89,7 +89,7 @@ frame:SetScript("OnShow", function(frame)
 	end)
 
 
-	frame:SetScript("OnShow", fade)
+	frame:SetScript("OnShow", nil)
 end)
 
 InterfaceOptions_AddCategory(frame)

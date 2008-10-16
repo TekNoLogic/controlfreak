@@ -84,7 +84,6 @@ frame:SetScript("OnShow", function(frame)
 
 
 	local function OnShow(frame)
-		ww.FadeIn(frame, 0.5)
 		debuff:SetText(ControlFreak.db.profile.spellname)
 		editbox:SetText(ControlFreak.db.profile.macrotext or "/script ChatFrame1:AddMessage(\"Error loading macro!\")")
 		for i,v in ipairs(creaturetypes) do checks[v]:SetChecked(ControlFreak.db.profile.targtypes[v]) end
