@@ -56,6 +56,7 @@ frame:SetScript("OnShow", function(frame)
 			deletebutton:Enable()
 		end
 	end
+	ToggleButtons()
 
 
 	local rows = {}
