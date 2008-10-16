@@ -171,6 +171,24 @@ function ControlFreak:LoadDefaultMacros()
 		self.db.profile.targtypes = {Undead = true, Demon = true}
 	end
 
+	-- Paladin - Repentance --
+	self.db:SetProfile("Paladin - Repentance")
+	if self.db.profile.macrotext == "/freak" then
+		self.db.profile.macrotext = [[
+/clearfocus [modifier:shift]
+/stopmacro [modifier:shift]
+/cast [target=focus,exists,nodead,harm] Repentance
+/stopmacro [target=focus,exists,nodead,harm]
+/cast [combat,harm,exists,nodead] Repentance
+/focus [exists,harm,nodead] target
+/clearfocus [target=focus,dead]
+/stopmacro [button:1/3/4/5] [combat]
+/freak
+]]
+		self.db.profile.spellname = "Repentance"
+		self.db.profile.targtypes = {Undead = true, Demon = true, Dragonkin = true, Humanoid = true, Giant = true}
+	end
+
 	-- Hunter - Freezing Trap --
 	self.db:SetProfile("Hunter - Freezing Trap")
 	if self.db.profile.macrotext == "/freak" then
