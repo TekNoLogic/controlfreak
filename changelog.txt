@@ -1,3 +1,10 @@
+3.0.2.13-Beta
+    Remove fadey crap from config panels
+    Disable DB buttons when panel is frist shown
+    Add pally Repentance profile
+    Add Russian locale
+    Escape out deDE locale
+
 3.0.1.12-Beta
     Update for wrath build 8962 config panel breakage
     Embed update
