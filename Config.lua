@@ -1,6 +1,4 @@
-﻿if not IS_WRATH_BUILD then InterfaceOptionsFrame_OpenToCategory = InterfaceOptionsFrame_OpenToFrame end
-
-
+﻿
 if not ControlFreak then return end
 
 
