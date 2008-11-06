@@ -178,7 +178,7 @@ end
 function ControlFreak:PLAYER_FOCUS_CHANGED()
 	focusexists = UnitExists("focus")
 	self:Debug(1, "PLAYER_FOCUS_CHANGED", focusexists)
-	focusisenemy = focusexists and UnitIsEnemy("player", "focus")
+	focusisenemy = focusexists and UnitCanAttack("player", "focus")
 	focusdead = focusexists and UnitIsDead("focus")
 	isvalid.focus = self.db.profile.targtypes[UnitCreatureType("focus")]
 
