@@ -1,3 +1,7 @@
+3.0.3.14-Beta
+    Fix status info not showing for neutral mobs
+    Remove 2.4.3 compat
+
 3.0.2.13-Beta
     Remove fadey crap from config panels
     Disable DB buttons when panel is frist shown
