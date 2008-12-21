@@ -48,9 +48,15 @@ frame:SetScript("OnShow", function(frame)
 	compactmode:SetChecked(ControlFreak.db.char.compactmode)
 
 
+	local textpopup = tekcheck.new(frame, nil, "Expiration warning", "TOPLEFT", compactmode, "BOTTOMLEFT", 0, -GAP)
+	textpopup.tiptext = "Show warning text when spell is about to break.  Uses the value set for break threshold."
+	textpopup:SetScript("OnClick", function(self) checksound(self); ControlFreak.db.char.textpopup = not ControlFreak.db.char.textpopup end)
+	textpopup:SetChecked(ControlFreak.db.char.textpopup)
+
+
 	local threshslider, threshslidertext, threshcontainer = tekslider.new(frame, "Break Threshold: "..ControlFreak.db.char.breakthreshold.." sec", 0, 50, "LEFT", frame, "TOP", GAP, 0)
 	threshcontainer:SetPoint("TOP", lockpos, "TOP", 0, 0)
-	threshslider.tiptext = "Time (in seconds) before spell breaks to unfade frame."
+	threshslider.tiptext = "Time (in seconds) before spell breaks to unfade frame.  Also shows warning text if enabled."
 	threshslider:SetValue(ControlFreak.db.char.breakthreshold)
 	threshslider:SetValueStep(1)
 	threshslider:SetScript("OnValueChanged", function()

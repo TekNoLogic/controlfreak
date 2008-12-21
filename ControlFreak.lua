@@ -235,7 +235,7 @@ function ControlFreak:StopTimer()
 end
 
 
-local shortnotes = {["Control Freak"] = "CF", Invalid = "Inv", Controlled = "Ctr", Damage = "Dmg", Loose = "L", Ready = "Rdy", Dead = "D"}
+local pastthreshold, shortnotes = false, {["Control Freak"] = "CF", Invalid = "Inv", Controlled = "Ctr", Damage = "Dmg", Loose = "L", Ready = "Rdy", Dead = "D"}
 function ControlFreak:OnUpdate(elapsed)
 	local self = ControlFreak
 	self.elapsed = self.elapsed or 0
@@ -261,7 +261,7 @@ function ControlFreak:OnUpdate(elapsed)
 				timeLeft = select(7, UnitDebuff(unit, controlled[unit]))
 				if timeLeft then timeLeft = timeLeft - GetTime() end
 				color, note = "cyan", timeLeft and string.format("Controlled (%ds)", timeLeft) or "Controlled"
-				if timeLeft and timeLeft <= self.db.char.breakthreshold then alpha = 1.0 end
+				if timeLeft and timeLeft <= (self.db.char.breakthreshold + .5) then alpha = 1.0 end
 			elseif lasthptime and lasthptime >= (GetTime()-damageinterval) then alpha, color, note = 1.0, "red", "Damage"
 			elseif UnitAffectingCombat(unit) then alpha, color, note = 1.0, "orange", "Loose"
 			else alpha, color, note = 1.0, "green", "Ready" end
@@ -283,6 +283,12 @@ function ControlFreak:OnUpdate(elapsed)
 		(clearfocus1 and L["Click to clear focus\n"] or "").. (clearfocus2 and L["Shift-click to clear focus\n"] or "")..
 		L["Type /freak or right-click to open config"])
 
+	local nowpastthreshold = timeLeft and timeLeft <= (self.db.char.breakthreshold + .5)
+	if nowpastthreshold and not pastthreshold and self.db.char.textpopup then
+		PlaySound("RaidBossEmoteWarning")
+		RaidNotice_AddMessage(RaidBossEmoteFrame, "Crowd control will expire in "..math.floor(timeLeft).." seconds", ChatTypeInfo["RAID_BOSS_EMOTE"])
+	end
+	pastthreshold = nowpastthreshold
 	lego:SetAlpha(alpha)
 	lego:SetBackdropBorderColor(unpack(colors[color]))
 	if self.db.char.compactmode then note = timeLeft and string.format("%ds", timeLeft) or shortnotes[note] end
