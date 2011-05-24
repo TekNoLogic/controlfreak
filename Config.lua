@@ -15,6 +15,8 @@ local GAP = 8
 --      Panel      --
 ---------------------
 
+if AddonLoader and AddonLoader.RemoveInterfaceOptions then AddonLoader:RemoveInterfaceOptions("Control Freak") end
+
 local frame = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 frame.name = "Control Freak"
 frame:Hide()
